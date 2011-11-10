@@ -1,26 +1,35 @@
 from pylab import *
 from scipy import *
+import numpy
 
 def plot_result(filename):
     
-    with open('../test_result.dat') as f:
-        t = [double(line.split()[0]) for line in f]
-    with open('../test_result.dat') as f:
-        phi = [double(line.split()[1]) for line in f]
-    with open('../test_result.dat') as f:
-        omega = [double(line.split()[2]) for line in f]
+    with open(filename) as f:
+        t = numpy.array([double(line.split()[0]) for line in f])
+    with open(filename) as f:
+        phi = numpy.array([double(line.split()[1]) for line in f])
+    with open(filename) as f:
+        omega = numpy.array([double(line.split()[2]) for line in f])
     
-    print len(t)
-    print len(phi)
-    print len(omega)
+    if omega[-1] > 100 or omega[-1] < 0:
+        print filename
+        figure(1)
+        subplot(211)
+        plot(t, phi - 30 * t)
+        subplot(212)
+        plot(t, omega)
+    
+        figure(2)
+        plot(mod(phi, 2*pi), omega)
     
     
-    figure()
-    subplot(211)
-    plot(t, mod(phi, 2*pi))
-    subplot(212)
-    plot(t, omega)
-    
-    figure()
-    plot(mod(phi, pi), omega)
+def plot_all():
+    for i in range(0,627):
+        print i
+        plot_result('../test_result' + str(i) + '.dat')
+              
+               
     show()
+
+        
+    

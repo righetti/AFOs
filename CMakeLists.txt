@@ -4,6 +4,9 @@ PROJECT(AFOs)
 
 FIND_PACKAGE(BOOST)
 
+SET(CMAKE_CXX_FLAGS  "-g -Wall -O3 -fopenmp")
+#SET( CMAKE_VERBOSE_MAKEFILE on )
+
 #INCLUDE_DIRECTORIES(${BOOST_INCLUDE_DIR})
 #link_directories ( ${BOOST_LIBRARY_DIRS} )
 
@@ -24,4 +27,3 @@ ADD_EXECUTABLE(afo_systematic_test_main
 #)
 
 
-set(CMAKE_CXX_FLAGS "-g -Wall")
