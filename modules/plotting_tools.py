@@ -31,7 +31,7 @@ def plot_result(filename):
     
 def plot_all():
     
-    for i in range(0,627, 1):
+    for i in range(0,1, 1):
         print i
         plot_result('../test_result' + str(i) + '.dat')
     show()
