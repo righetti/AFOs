@@ -54,15 +54,17 @@ class afo_ode:
     
         return dydt
     
-    
+def plot_cpp_res():
+    res = loadtxt('result.txt')
+    plot(res[:,0],res[:,2])
+ 
 def stupid_test():
-    omega0 = 100;
+    omega0 = 10;
     omegaF = 100;
     
-    iter = 100
+    iter = 300
     omega = zeros(2*iter)
     omega[0] = omega0
-    omega[1] = omega0 + pi
     for i in range(iter-1):
             omega[2*i+1] = omega[2*i]*exp(-(pi/omegaF))
             omega[2*i+2] = omega[2*i+1] + pi
@@ -71,4 +73,4 @@ def stupid_test():
 #            omega[2*i+2] = omega[2*i+1] - pi
     
 #    subplot(3,1,2)
-    plot(arange(iter)*pi/omegaF, omega[::2], 'x',arange(iter)*pi/omegaF, omega[1::2], 'x')
+    plot(arange(iter)*pi/omegaF, omega[::2], 'x',arange(iter)*pi/omegaF+pi/omegaF, omega[1::2], 'x')
