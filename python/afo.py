@@ -3,7 +3,6 @@ from scipy import *
 from numpy import *
 import sys
 import numpy
-from test.test_colorsys import frange
 
 
 def run_afo(Tend=0.1,K=1000,dt=0.0001):
@@ -11,7 +10,7 @@ def run_afo(Tend=0.1,K=1000,dt=0.0001):
     
     omegaF = 100
     
-    y0 = array([0,100])
+    y0 = array([0,10])
     
     my_afo = afo_ode(K,omegaF)
     y = euler_integration(my_afo, t, y0,dt)
@@ -23,6 +22,9 @@ def run_afo(Tend=0.1,K=1000,dt=0.0001):
 #    for i in frange(0,Tend,(1./omegaF)*(pi/2)):
 #        vlines(i, 130, 150)
     plot(t,y[1,:])
+    
+    figure()
+    plot(y[1,:],y[0,:]-y[1,:])
 #    subplot(3,1,3)
 #    plot(t,cos(omegaF*t))
 #    for i in frange(0,Tend,(1./omegaF)*(pi/2)):
@@ -49,8 +51,8 @@ class afo_ode:
     
     def dydt(self,t,y):
         dydt = array([0,0])
-        dydt[0] = y[1] - self.K * sin(y[0]) * cos(self.omegaF*t-pi/2)
-        dydt[1] = - self.K * sin(y[0]) * cos(self.omegaF*t-pi/2)
+        dydt[0] = y[1] - self.K * sin(y[0]) * cos(self.omegaF*t)
+        dydt[1] = - self.K * sin(y[0]) * cos(self.omegaF*t)
     
         return dydt
     
