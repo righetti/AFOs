@@ -1,247 +1,46 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?fileVersion 4.0.0?>
 
-<cproject>
-<storageModule moduleId="org.eclipse.cdt.core.settings">
-<cconfiguration id="org.eclipse.cdt.core.default.config.1">
-<storageModule buildSystemId="org.eclipse.cdt.core.defaultConfigDataProvider" id="org.eclipse.cdt.core.default.config.1" moduleId="org.eclipse.cdt.core.settings" name="Configuration">
-<externalSettings/>
-<extensions>
-<extension id="org.eclipse.cdt.core.MachO" point="org.eclipse.cdt.core.BinaryParser">
-<attribute key="c++filt" value="c++filt"/>
-</extension>
-</extensions>
-</storageModule>
-<storageModule moduleId="org.eclipse.cdt.core.language.mapping">
-<project-mappings/>
-</storageModule>
-<storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
-<storageModule moduleId="org.eclipse.cdt.core.pathentry">
-<pathentry excluding="**/CMakeFiles/" kind="out" path=""/>
-<pathentry kind="mac" name="__STDC__" path="" value="1"/>
-<pathentry kind="mac" name="__STDC_HOSTED__" path="" value="1"/>
-<pathentry kind="mac" name="__GNUC__" path="" value="4"/>
-<pathentry kind="mac" name="__GNUC_MINOR__" path="" value="2"/>
-<pathentry kind="mac" name="__GNUC_PATCHLEVEL__" path="" value="1"/>
-<pathentry kind="mac" name="__APPLE_CC__" path="" value="5664"/>
-<pathentry kind="mac" name="__SIZE_TYPE__" path="" value="long unsigned int"/>
-<pathentry kind="mac" name="__PTRDIFF_TYPE__" path="" value="long int"/>
-<pathentry kind="mac" name="__WCHAR_TYPE__" path="" value="int"/>
-<pathentry kind="mac" name="__WINT_TYPE__" path="" value="int"/>
-<pathentry kind="mac" name="__INTMAX_TYPE__" path="" value="long int"/>
-<pathentry kind="mac" name="__UINTMAX_TYPE__" path="" value="long unsigned int"/>
-<pathentry kind="mac" name="__GXX_ABI_VERSION" path="" value="1002"/>
-<pathentry kind="mac" name="__SCHAR_MAX__" path="" value="127"/>
-<pathentry kind="mac" name="__SHRT_MAX__" path="" value="32767"/>
-<pathentry kind="mac" name="__INT_MAX__" path="" value="2147483647"/>
-<pathentry kind="mac" name="__LONG_MAX__" path="" value="9223372036854775807L"/>
-<pathentry kind="mac" name="__LONG_LONG_MAX__" path="" value="9223372036854775807LL"/>
-<pathentry kind="mac" name="__WCHAR_MAX__" path="" value="2147483647"/>
-<pathentry kind="mac" name="__CHAR_BIT__" path="" value="8"/>
-<pathentry kind="mac" name="__INTMAX_MAX__" path="" value="9223372036854775807L"/>
-<pathentry kind="mac" name="__FLT_EVAL_METHOD__" path="" value=" "/>
-<pathentry kind="mac" name="__DEC_EVAL_METHOD__" path="" value="2"/>
-<pathentry kind="mac" name="__FLT_RADIX__" path="" value="2"/>
-<pathentry kind="mac" name="__FLT_MANT_DIG__" path="" value="24"/>
-<pathentry kind="mac" name="__FLT_DIG__" path="" value="6"/>
-<pathentry kind="mac" name="__FLT_MIN_EXP__" path="" value="(-125)"/>
-<pathentry kind="mac" name="__FLT_MIN_10_EXP__" path="" value="(-37)"/>
-<pathentry kind="mac" name="__FLT_MAX_EXP__" path="" value="128"/>
-<pathentry kind="mac" name="__FLT_MAX_10_EXP__" path="" value="38"/>
-<pathentry kind="mac" name="__FLT_MAX__" path="" value="3.40282347e+38F"/>
-<pathentry kind="mac" name="__FLT_MIN__" path="" value="1.17549435e-38F"/>
-<pathentry kind="mac" name="__FLT_EPSILON__" path="" value="1.19209290e-7F"/>
-<pathentry kind="mac" name="__FLT_DENORM_MIN__" path="" value="1.40129846e-45F"/>
-<pathentry kind="mac" name="__FLT_HAS_DENORM__" path="" value="1"/>
-<pathentry kind="mac" name="__FLT_HAS_INFINITY__" path="" value="1"/>
-<pathentry kind="mac" name="__FLT_HAS_QUIET_NAN__" path="" value="1"/>
-<pathentry kind="mac" name="__DBL_MANT_DIG__" path="" value="53"/>
-<pathentry kind="mac" name="__DBL_DIG__" path="" value="15"/>
-<pathentry kind="mac" name="__DBL_MIN_EXP__" path="" value="(-1021)"/>
-<pathentry kind="mac" name="__DBL_MIN_10_EXP__" path="" value="(-307)"/>
-<pathentry kind="mac" name="__DBL_MAX_EXP__" path="" value="1024"/>
-<pathentry kind="mac" name="__DBL_MAX_10_EXP__" path="" value="308"/>
-<pathentry kind="mac" name="__DBL_MAX__" path="" value="1.7976931348623157e+308"/>
-<pathentry kind="mac" name="__DBL_MIN__" path="" value="2.2250738585072014e-308"/>
-<pathentry kind="mac" name="__DBL_EPSILON__" path="" value="2.2204460492503131e-16"/>
-<pathentry kind="mac" name="__DBL_DENORM_MIN__" path="" value="4.9406564584124654e-324"/>
-<pathentry kind="mac" name="__DBL_HAS_DENORM__" path="" value="1"/>
-<pathentry kind="mac" name="__DBL_HAS_INFINITY__" path="" value="1"/>
-<pathentry kind="mac" name="__DBL_HAS_QUIET_NAN__" path="" value="1"/>
-<pathentry kind="mac" name="__LDBL_MANT_DIG__" path="" value="64"/>
-<pathentry kind="mac" name="__LDBL_DIG__" path="" value="18"/>
-<pathentry kind="mac" name="__LDBL_MIN_EXP__" path="" value="(-16381)"/>
-<pathentry kind="mac" name="__LDBL_MIN_10_EXP__" path="" value="(-4931)"/>
-<pathentry kind="mac" name="__LDBL_MAX_EXP__" path="" value="16384"/>
-<pathentry kind="mac" name="__LDBL_MAX_10_EXP__" path="" value="4932"/>
-<pathentry kind="mac" name="__DECIMAL_DIG__" path="" value="21"/>
-<pathentry kind="mac" name="__LDBL_MAX__" path="" value="1.18973149535723176502e+4932L"/>
-<pathentry kind="mac" name="__LDBL_MIN__" path="" value="3.36210314311209350626e-4932L"/>
-<pathentry kind="mac" name="__LDBL_EPSILON__" path="" value="1.08420217248550443401e-19L"/>
-<pathentry kind="mac" name="__LDBL_DENORM_MIN__" path="" value="3.64519953188247460253e-4951L"/>
-<pathentry kind="mac" name="__LDBL_HAS_DENORM__" path="" value="1"/>
-<pathentry kind="mac" name="__LDBL_HAS_INFINITY__" path="" value="1"/>
-<pathentry kind="mac" name="__LDBL_HAS_QUIET_NAN__" path="" value="1"/>
-<pathentry kind="mac" name="__DEC32_MANT_DIG__" path="" value="7"/>
-<pathentry kind="mac" name="__DEC32_MIN_EXP__" path="" value="(-95)"/>
-<pathentry kind="mac" name="__DEC32_MAX_EXP__" path="" value="96"/>
-<pathentry kind="mac" name="__DEC32_MIN__" path="" value="1E-95DF"/>
-<pathentry kind="mac" name="__DEC32_MAX__" path="" value="9.999999E96DF"/>
-<pathentry kind="mac" name="__DEC32_EPSILON__" path="" value="1E-6DF"/>
-<pathentry kind="mac" name="__DEC32_DEN__" path="" value="0.000001E-95DF"/>
-<pathentry kind="mac" name="__DEC64_MANT_DIG__" path="" value="16"/>
-<pathentry kind="mac" name="__DEC64_MIN_EXP__" path="" value="(-383)"/>
-<pathentry kind="mac" name="__DEC64_MAX_EXP__" path="" value="384"/>
-<pathentry kind="mac" name="__DEC64_MIN__" path="" value="1E-383DD"/>
-<pathentry kind="mac" name="__DEC64_MAX__" path="" value="9.999999999999999E384DD"/>
-<pathentry kind="mac" name="__DEC64_EPSILON__" path="" value="1E-15DD"/>
-<pathentry kind="mac" name="__DEC64_DEN__" path="" value="0.000000000000001E-383DD"/>
-<pathentry kind="mac" name="__DEC128_MANT_DIG__" path="" value="34"/>
-<pathentry kind="mac" name="__DEC128_MIN_EXP__" path="" value="(-6143)"/>
-<pathentry kind="mac" name="__DEC128_MAX_EXP__" path="" value="6144"/>
-<pathentry kind="mac" name="__DEC128_MIN__" path="" value="1E-6143DL"/>
-<pathentry kind="mac" name="__DEC128_MAX__" path="" value="9.999999999999999999999999999999999E6144DL"/>
-<pathentry kind="mac" name="__DEC128_EPSILON__" path="" value="1E-33DL"/>
-<pathentry kind="mac" name="__DEC128_DEN__" path="" value="0.000000000000000000000000000000001E-6143DL"/>
-<pathentry kind="mac" name="__REGISTER_PREFIX__" path="" value=" "/>
-<pathentry kind="mac" name="__USER_LABEL_PREFIX__" path="" value="_"/>
-<pathentry kind="mac" name="__VERSION__" path="" value="&quot;4.2.1 (Apple Inc. build 5664)&quot;"/>
-<pathentry kind="mac" name="__GNUC_GNU_INLINE__" path="" value="1"/>
-<pathentry kind="mac" name="_LP64" path="" value="1"/>
-<pathentry kind="mac" name="__LP64__" path="" value="1"/>
-<pathentry kind="mac" name="__BLOCKS__" path="" value="1"/>
-<pathentry kind="mac" name="__NO_INLINE__" path="" value="1"/>
-<pathentry kind="mac" name="__FINITE_MATH_ONLY__" path="" value=" "/>
-<pathentry kind="mac" name="__pic__" path="" value="2"/>
-<pathentry kind="mac" name="__PIC__" path="" value="2"/>
-<pathentry kind="mac" name="__SSP__" path="" value="1"/>
-<pathentry kind="mac" name="__amd64" path="" value="1"/>
-<pathentry kind="mac" name="__amd64__" path="" value="1"/>
-<pathentry kind="mac" name="__x86_64" path="" value="1"/>
-<pathentry kind="mac" name="__x86_64__" path="" value="1"/>
-<pathentry kind="mac" name="__tune_core2__" path="" value="1"/>
-<pathentry kind="mac" name="__MMX__" path="" value="1"/>
-<pathentry kind="mac" name="__SSE__" path="" value="1"/>
-<pathentry kind="mac" name="__SSE2__" path="" value="1"/>
-<pathentry kind="mac" name="__SSE3__" path="" value="1"/>
-<pathentry kind="mac" name="__SSE_MATH__" path="" value="1"/>
-<pathentry kind="mac" name="__SSE2_MATH__" path="" value="1"/>
-<pathentry kind="mac" name="__k8" path="" value="1"/>
-<pathentry kind="mac" name="__k8__" path="" value="1"/>
-<pathentry kind="mac" name="__LITTLE_ENDIAN__" path="" value="1"/>
-<pathentry kind="mac" name="__MACH__" path="" value="1"/>
-<pathentry kind="mac" name="__APPLE__" path="" value="1"/>
-<pathentry kind="mac" name="__ENVIRONMENT_MAC_OS_X_VERSION_MIN_REQUIRED__" path="" value="1068"/>
-<pathentry kind="mac" name="__CONSTANT_CFSTRINGS__" path="" value="1"/>
-<pathentry kind="mac" name="__strong" path="" value=" "/>
-<pathentry kind="mac" name="__weak" path="" value="__attribute__((objc_gc(weak)))"/>
-<pathentry kind="mac" name="__block" path="" value="__attribute__((__blocks__(byref)))"/>
-<pathentry kind="mac" name="OBJC_NEW_PROPERTIES" path="" value="1"/>
-<pathentry kind="mac" name="__DYNAMIC__" path="" value="1"/>
-<pathentry kind="mac" name="__cplusplus" path="" value="1"/>
-<pathentry kind="mac" name="__GNUG__" path="" value="4"/>
-<pathentry kind="mac" name="__GXX_WEAK__" path="" value="1"/>
-<pathentry kind="mac" name="__DEPRECATED" path="" value="1"/>
-<pathentry kind="mac" name="__EXCEPTIONS" path="" value="1"/>
-<pathentry kind="mac" name="__private_extern__" path="" value="extern"/>
-<pathentry include="/Users/righetti/Code/AFOs/include" kind="inc" path="" system="true"/>
-<pathentry include="/opt/local/include" kind="inc" path="" system="true"/>
-<pathentry include="/sw/include" kind="inc" path="" system="true"/>
-<pathentry include="/usr/local/include" kind="inc" path="" system="true"/>
-<pathentry include="/usr/lib/gcc/i686-apple-darwin10/4.2.1/include" kind="inc" path="" system="true"/>
-<pathentry include="/usr/include" kind="inc" path="" system="true"/>
-<pathentry include="/System/Library/Frameworks (framework directory)" kind="inc" path="" system="true"/>
-<pathentry include="/Library/Frameworks (framework directory)" kind="inc" path="" system="true"/>
-<pathentry include="/usr/include/c++/4.2.1" kind="inc" path="" system="true"/>
-<pathentry include="/usr/include/c++/4.2.1/i686-apple-darwin10/x86_64" kind="inc" path="" system="true"/>
-<pathentry include="/usr/include/c++/4.2.1/backward" kind="inc" path="" system="true"/>
-</storageModule>
-<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets">
-<buildTargets>
-<target name=": rebuild_cache" path="" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
-<buildCommand>/opt/local/bin/gmake</buildCommand>
-<buildArguments></buildArguments>
-<buildTarget>rebuild_cache</buildTarget>
-<stopOnError>true</stopOnError>
-<useDefaultCommand>false</useDefaultCommand>
-</target>
-<target name="[exe] test_afo_sys_init" path="" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
-<buildCommand>/opt/local/bin/gmake</buildCommand>
-<buildArguments></buildArguments>
-<buildTarget>test_afo_sys_init</buildTarget>
-<stopOnError>true</stopOnError>
-<useDefaultCommand>false</useDefaultCommand>
-</target>
-<target name="[exe] test_afo_sys_init/fast" path="" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
-<buildCommand>/opt/local/bin/gmake</buildCommand>
-<buildArguments></buildArguments>
-<buildTarget>test_afo_sys_init/fast</buildTarget>
-<stopOnError>true</stopOnError>
-<useDefaultCommand>false</useDefaultCommand>
-</target>
-<target name=": all" path="" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
-<buildCommand>/opt/local/bin/gmake</buildCommand>
-<buildArguments></buildArguments>
-<buildTarget>all</buildTarget>
-<stopOnError>true</stopOnError>
-<useDefaultCommand>false</useDefaultCommand>
-</target>
-<target name=": clean" path="" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
-<buildCommand>/opt/local/bin/gmake</buildCommand>
-<buildArguments></buildArguments>
-<buildTarget>clean</buildTarget>
-<stopOnError>true</stopOnError>
-<useDefaultCommand>false</useDefaultCommand>
-</target>
-<target name="[obj] src/test_afo_sys_init.cpp.o" path="" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
-<buildCommand>/opt/local/bin/gmake</buildCommand>
-<buildArguments></buildArguments>
-<buildTarget>src/test_afo_sys_init.cpp.o</buildTarget>
-<stopOnError>true</stopOnError>
-<useDefaultCommand>false</useDefaultCommand>
-</target>
-<target name="[pre] src/test_afo_sys_init.cpp.i" path="" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
-<buildCommand>/opt/local/bin/gmake</buildCommand>
-<buildArguments></buildArguments>
-<buildTarget>src/test_afo_sys_init.cpp.i</buildTarget>
-<stopOnError>true</stopOnError>
-<useDefaultCommand>false</useDefaultCommand>
-</target>
-<target name="[to asm] src/test_afo_sys_init.cpp.s" path="" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
-<buildCommand>/opt/local/bin/gmake</buildCommand>
-<buildArguments></buildArguments>
-<buildTarget>src/test_afo_sys_init.cpp.s</buildTarget>
-<stopOnError>true</stopOnError>
-<useDefaultCommand>false</useDefaultCommand>
-</target>
-</buildTargets>
-</storageModule>
-<storageModule moduleId="scannerConfiguration">
-<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="org.eclipse.cdt.make.core.GCCStandardMakePerProjectProfile"/>
-<profile id="org.eclipse.cdt.make.core.GCCStandardMakePerProjectProfile">
-<buildOutputProvider>
-<openAction enabled="true" filePath=""/>
-<parser enabled="true"/>
-</buildOutputProvider>
-<scannerInfoProvider id="specsFile">
-<runAction arguments="-E -P -v -dD ${plugin_state_location}/${specs_file}" command="/usr/bin/gcc" useDefault="true"/>
-<parser enabled="true"/>
-</scannerInfoProvider>
-</profile>
-<profile id="org.eclipse.cdt.make.core.GCCStandardMakePerFileProfile">
-<buildOutputProvider>
-<openAction enabled="true" filePath=""/>
-<parser enabled="true"/>
-</buildOutputProvider>
-<scannerInfoProvider id="makefileGenerator">
-<runAction arguments="-f ${project_name}_scd.mk" command="/opt/local/bin/gmake" useDefault="true"/>
-<parser enabled="true"/>
-</scannerInfoProvider>
-</profile>
-</storageModule>
-</cconfiguration>
-</storageModule>
-<storageModule moduleId="cdtBuildSystem" version="4.0.0">
-<project id="AFOs.null.1" name="AFOs"/>
-</storageModule>
+<cproject storage_type_id="org.eclipse.cdt.core.XmlProjectDescriptionStorage">
+	<storageModule moduleId="org.eclipse.cdt.core.settings">
+		<cconfiguration id="cdt.managedbuild.toolchain.gnu.cross.base.2001429173">
+			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="cdt.managedbuild.toolchain.gnu.cross.base.2001429173" moduleId="org.eclipse.cdt.core.settings" name="Default">
+				<externalSettings/>
+				<extensions>
+					<extension id="org.eclipse.cdt.core.ELF" point="org.eclipse.cdt.core.BinaryParser"/>
+					<extension id="org.eclipse.cdt.core.GmakeErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.CWDLocator" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.GCCErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.GASErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.GLDErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+				</extensions>
+			</storageModule>
+			<storageModule moduleId="cdtBuildSystem" version="4.0.0">
+				<configuration artifactName="${ProjName}" buildProperties="" id="cdt.managedbuild.toolchain.gnu.cross.base.2001429173" name="Default" parent="org.eclipse.cdt.build.core.emptycfg">
+					<folderInfo id="cdt.managedbuild.toolchain.gnu.cross.base.2001429173.1648760227" name="/" resourcePath="">
+						<toolChain id="cdt.managedbuild.toolchain.gnu.cross.base.1917188250" name="cdt.managedbuild.toolchain.gnu.cross.base" superClass="cdt.managedbuild.toolchain.gnu.cross.base">
+							<option id="cdt.managedbuild.option.gnu.cross.prefix.2107954557" name="Prefix" superClass="cdt.managedbuild.option.gnu.cross.prefix"/>
+							<option id="cdt.managedbuild.option.gnu.cross.path.1356943314" name="Path" superClass="cdt.managedbuild.option.gnu.cross.path"/>
+							<targetPlatform archList="all" binaryParser="org.eclipse.cdt.core.ELF" id="cdt.managedbuild.targetPlatform.gnu.cross.1743920579" isAbstract="false" osList="all" superClass="cdt.managedbuild.targetPlatform.gnu.cross"/>
+							<builder id="cdt.managedbuild.builder.gnu.cross.830953194" managedBuildOn="false" name="Gnu Make Builder.Default" superClass="cdt.managedbuild.builder.gnu.cross"/>
+							<tool id="cdt.managedbuild.tool.gnu.cross.c.compiler.383281621" name="Cross GCC Compiler" superClass="cdt.managedbuild.tool.gnu.cross.c.compiler"/>
+							<tool id="cdt.managedbuild.tool.gnu.cross.cpp.compiler.1696699283" name="Cross G++ Compiler" superClass="cdt.managedbuild.tool.gnu.cross.cpp.compiler"/>
+							<tool id="cdt.managedbuild.tool.gnu.cross.c.linker.690651959" name="Cross GCC Linker" superClass="cdt.managedbuild.tool.gnu.cross.c.linker"/>
+							<tool id="cdt.managedbuild.tool.gnu.cross.cpp.linker.543658893" name="Cross G++ Linker" superClass="cdt.managedbuild.tool.gnu.cross.cpp.linker"/>
+							<tool id="cdt.managedbuild.tool.gnu.cross.archiver.989414526" name="Cross GCC Archiver" superClass="cdt.managedbuild.tool.gnu.cross.archiver"/>
+							<tool id="cdt.managedbuild.tool.gnu.cross.assembler.1223535029" name="Cross GCC Assembler" superClass="cdt.managedbuild.tool.gnu.cross.assembler"/>
+						</toolChain>
+					</folderInfo>
+				</configuration>
+			</storageModule>
+			<storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
+		</cconfiguration>
+	</storageModule>
+	<storageModule moduleId="cdtBuildSystem" version="4.0.0">
+		<project id="AFOs.null.2079588217" name="AFOs"/>
+	</storageModule>
+	<storageModule moduleId="scannerConfiguration">
+		<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
+	</storageModule>
+	<storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders"/>
 </cproject>
