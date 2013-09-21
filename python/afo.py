@@ -3,9 +3,12 @@ from scipy import *
 from numpy import *
 import sys
 import numpy
+<<<<<<< HEAD
 from test.test_colorsys import frange
 from numpy.ma.core import exp
 from mpl_toolkits.mplot3d import axes3d
+=======
+>>>>>>> aee62cccdc46865778ce8dbc578dc70877964b3e
 
 
 def run_afo(Tend=0.1,K=10000,dt=0.0001):
@@ -13,7 +16,7 @@ def run_afo(Tend=0.1,K=10000,dt=0.0001):
     
     omegaF = 10
     
-    y0 = array([0,1])
+    y0 = array([0,10])
     
     my_afo = afo_ode(K,omegaF)
     y = euler_integration(my_afo, t, y0,dt)
