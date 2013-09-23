@@ -15,9 +15,11 @@ find_package(Boost COMPONENTS filesystem system date_time python REQUIRED)
 message("Include dirs of boost: " ${Boost_INCLUDE_DIRS} )
 message("Libs of boost: " ${Boost_LIBRARIES} )
 
-find_package(PythonLibs REQUIRED)
+SET(PYTHON_INCLUDE_DIRS "/usr/local/Cellar/python/2.7.5/Frameworks/Python.framework/Headers")
+SET(PYTHON_LIBRARIES "/usr/local/Cellar/python/2.7.5/Frameworks/Python.framework/Versions/2.7/lib/libpython2.7.dylib")
 message("Include dirs of Python: " ${PYTHON_INCLUDE_DIRS} )
 message("Libs of Python: " ${PYTHON_LIBRARIES} )
+
 
 include_directories(
     ${Boost_INCLUDE_DIRS}

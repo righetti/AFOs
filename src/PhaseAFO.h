@@ -12,16 +12,22 @@
 
 class PhaseAFO {
 public:
-  PhaseAFO(double K, double omegaF, double lambda=1.0);
-  virtual ~PhaseAFO();
+  PhaseAFO(double K, double omegaF, double lambda);
+  ~PhaseAFO();
 
   Eigen::Vector2d dydt(const Eigen::Vector2d& y, double t);
 
-  double getK(){return K_;};
+  void integrate(double t_init, double t_end,
+                            const Eigen::Vector2d& init,
+                            Eigen::VectorXd& t, Eigen::MatrixXd& y,
+                            double dt=0.001,
+                            double save_dt=0.001);
+
 private:
   double K_;
   double omegaF_;
   double lambda_;
+
 };
 
 #endif /* PHASEAFO_H_ */
