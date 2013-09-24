@@ -36,6 +36,7 @@ void PhaseAFO::integrate(double t_init, double t_end,
 {
   int inner_loop = int(save_dt/dt);
   int length = int((t_end - t_init)/save_dt);
+
   y.resize(2,length);
   t.resize(length);
   y.col(0) = init;
