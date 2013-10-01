@@ -33,7 +33,7 @@ numeric::array integrate_afo(PhaseAFO& afo, double t_init, double t_end,
   N[0] = 3;
   N[1] = long(t.size());
   int nd = 2;
-  numeric::array res = (static_cast<numeric::array>(handle<>(PyArray_SimpleNew(2,N, PyArray_DOUBLE))));
+  numeric::array res = (static_cast<numeric::array>(handle<>(PyArray_SimpleNew(nd,N, PyArray_DOUBLE))));
 
   for(int i=0; i<t.size(); ++i)
   {
@@ -48,7 +48,7 @@ numeric::array integrate_afo(PhaseAFO& afo, double t_init, double t_end,
 
 BOOST_PYTHON_FUNCTION_OVERLOADS(integrate_afo_overloads, integrate_afo, 4, 6)
 
-BOOST_PYTHON_MODULE(libafos)
+BOOST_PYTHON_MODULE(afos)
 {
   //important to have correct array passing between python and c++
   import_array();
@@ -57,6 +57,5 @@ BOOST_PYTHON_MODULE(libafos)
 
   class_<PhaseAFO>("PhaseAFO", init<double,double,double>())
   	                .enable_pickling();
-
   def("integrate_afo",integrate_afo,integrate_afo_overloads());
 }
