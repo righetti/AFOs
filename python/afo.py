@@ -7,6 +7,23 @@ from test.test_colorsys import frange
 from numpy.ma.core import exp
 from mpl_toolkits.mplot3d import axes3d
 
+fig_width_pt = 4*246.0  # Get this from LaTeX using \showthe\columnwidth
+inches_per_pt = 1.0/72.27               # Convert pt to inch
+golden_mean = (sqrt(5)-1.0)/2.0         # Aesthetic ratio
+fig_width = fig_width_pt*inches_per_pt  # width in inches
+fig_height = fig_width*golden_mean      # height in inches
+fig_size =  [fig_width,fig_height]
+params = {'backend': 'ps',
+          'axes.labelsize': 40,
+          'text.fontsize': 40,
+          'legend.fontsize': 40,
+          'xtick.labelsize': 30,
+          'ytick.labelsize': 30,
+          'lines.linewidth': 6,
+          'text.usetex': True,
+          'figure.figsize': fig_size}
+rcParams.update(params)
+rc('font',**{'family':'sans-serif','sans-serif':['Helvetica']})
 
 def run_afo(Tend=0.1,K=10000,dt=0.0001):
     t = arange(0,Tend,dt)
@@ -92,9 +109,44 @@ def plot_invariant_manifold():
     invariant_k(4,ax)
     invariant_k(5,ax)
     
-    
 
+def plot_invariant_man():
+    epsilon = 0.0001
+#     f_theta = 0.01
+    #Omega = linspace(-5., 5., 100)
+    Omega = -100
+    f_theta = linspace(0.002,0.3,200)
+    for i in arange(-3,4,2):
+        plot(f_theta, (i*pi - Omega) * (1 + (epsilon * i)/((-1)**i * f_theta)), '--k')#unstable
+        plot(-f_theta, (i*pi - Omega) * (1 - (epsilon * i)/((-1)**i * f_theta)), 'k')
+        text(-0.3+0.005,i*pi+0.3,'k=%d' % i, fontsize=25)
+        text(0.3-0.035,i*pi+0.3,'k=%d' % i, fontsize=25)
+    for i in arange(-2,4,2):
+        plot(f_theta, (i*pi - Omega) * (1 + (epsilon * i)/((-1)**i * f_theta)), 'k')
+        plot(-f_theta, (i*pi - Omega) * (1 - (epsilon * i)/((-1)**i * f_theta)), '--k')#unstable
+        text(-0.3+0.005,i*pi+0.3,'k=%d' % i, fontsize=25)
+        text(0.3-0.035,i*pi+0.3,'k=%d' % i, fontsize=25)
+        
+    xlabel(r'$F(\theta)$')
+    ylabel(r'$\omega$')
+#     xlim([-0.3,0.3])
+#     ylim([-12,12])
+    
+#     savefig('fig1.pdf')
  
+def plot_invariant_man2():
+    epsilon = 0.0001
+    f_theta = 0.01
+    Omega = linspace(-10., 10., 100)
+    for i in arange(-3,4,2):
+        plot(Omega, (i*pi - Omega) * (1 + (epsilon * i)/((-1)**i * f_theta)), '--k')#unstable
+        plot(Omega, (i*pi - Omega) * (1 - (epsilon * i)/((-1)**i * f_theta)), 'k')
+    for i in arange(-2,4,2):
+        plot(Omega, (i*pi - Omega) * (1 + (epsilon * i)/((-1)**i * f_theta)), 'k')
+        plot(Omega, (i*pi - Omega) * (1 - (epsilon * i)/((-1)**i * f_theta)), '--k')#unstable
+ 
+    xlabel(r'$\Omega$')
+    ylabel(r'$\omega$')
  
 def plot_fixed_point():
     omegaF = arange(0,100,0.001)
