@@ -8,7 +8,7 @@ from afos import afos
 
 from numpy.ma.core import exp
 from mpl_toolkits.mplot3d import axes3d
-from numpy import sqrt, arange, pi, meshgrid, cos, sin, mod, size, ones, zeros, linspace
+from numpy import sqrt, arange, pi, meshgrid, cos, sin, mod, size, ones, zeros, linspace, floor, exp
 
 
 fig_width_pt = 4*246.0  # Get this from LaTeX using \showthe\columnwidth
@@ -34,43 +34,330 @@ mp.rc('savefig', format='pdf')
 mp.rc('font', size = 40)
 mp.rc('text', usetex = True)
 
+def coth(z):
+    return (exp(z)+exp(-z))/(exp(z)-exp(-z))
 
-
-def plot_afo_periodic():
+def plot_afo_3periodic():
     mp.rc('lines', lw=4)
-
-    K = 100000.
+    mp.rc('font', size=60)
+    
+    K = 10.**7
     omegaF = 100.
     lamb = 1.
-    dt = 0.000001
-    save_dt = 0.0001
-    t_end = 8
-    omega0 = 20/lamb
-    phi0 = 0
+    dt = 10**-7
+    save_dt = 10**-4
+    t_end = 6.
+    t_start = 0.
+    omega0 = 20./lamb
+    phi0 = 0.
     
     #initialize an AFO object
     afo_obj = afos.PhaseAFO(K,omegaF,lamb)
-    res = afos.integrate_afo(afo_obj,0,t_end,np.array([phi0,omega0]),dt,save_dt)
-    
+    #run an integration
+    res = afos.integrate_afo(afo_obj,t_start,t_end,np.array([phi0,omega0]),dt,save_dt)
+
+    #generate data to be plotted    
     t = res[0,:]
     phi = res[1,:]
     omega = res[2,:]
 
-    fig = plt.figure()
-
-    ax1 = fig.add_subplot(211)
-    ax1.plot(t, phi)
-    plt.xlim([0, t_end])
-    
     omega_bar_p = pi / (1 - exp(-lamb*pi/omegaF))
     omega_bar_m = pi / (exp(lamb*pi/omegaF) - 1)
     omega_bar_avg = 0.5*(omega_bar_p + omega_bar_m)
+
+    print omega_bar_avg
     
+    tn = arange(0,t_end,pi/omegaF)
+    omega_p = (omega[(np.abs(t-pi/omegaF/2)).argmin()]+pi - omega_bar_p)*exp(-lamb * tn) + omega_bar_p
+    omega_m = (omega[(np.abs(t-pi/omegaF/2)).argmin()] - omega_bar_m)*exp(-lamb * tn) + omega_bar_m
+    omega_avg = (omega0 -omega_bar_avg) * exp(-lamb*t) + omega_bar_avg
+
+    phi_m = zeros(size(tn))
+    phi_m[0] = phi[(np.abs(t-pi/omegaF/2)).argmin()]
+    for i in range(1,size(tn)):
+        phi_m[i] = phi_m[i-1] + pi
+    phi_p = phi_m+pi
+
+    #plot stuff
+    fig = plt.figure(1)
+    
+    m = plt.get_current_fig_manager()
+    m.resize(1591, 1273)
+    
+    fig.set_size_inches([ 19.8875,  15.9125])
+       
+    #axes 1
+    ax1 = fig.add_subplot(211)
+    ax1.set_xlim([0, t_end])
+    ax1.set_ylim([-10, 650])
+    ax1.set_ylabel(r'$\displaystyle \phi$', size=80)
+       
+    for tick in ax1.xaxis.get_major_ticks():
+        tick.label.set_fontsize(40)
+    for tick in ax1.yaxis.get_major_ticks():
+        tick.label.set_fontsize(40)
+       
+    ax1_subax1 = create_subax(fig, ax1, [0.68,0.1,0.3,0.5], 
+                              xlimit=[5.55,5.75], ylimit=[550,580],
+                              xticks=[5.6,5.7], yticks=[550,560,570], side='b',
+                              )
+    
+    ax1_subax2 = create_subax(fig, ax1, [0.05,0.49,0.3,0.5], 
+                              xlimit=[0.15,0.35], ylimit=[10,40],
+                              xticks=[0.2,0.3], yticks=[15,25,35], side='t',
+                              )
+    axes_plot = [ax1, ax1_subax1, ax1_subax2]
+    for a in axes_plot:
+        if a == ax1:
+            mw = 2.0
+            ms = 4.0
+        else:
+            mw = 4.0
+            ms = 10.0
+            
+            #plot cos = 0
+            tx = arange((pi/2)/omegaF,t_end,pi/omegaF   )
+            for i in tx:
+                a.plot([i,i],[0,650],ls=':',lw=2,color='k')
+                
+        a.plot(t, phi, color='b', lw=6, ls='-')
+        a.plot(tn+pi/omegaF/2+0.0005, phi_p, ls='', marker='x', markeredgewidth=mw, markersize=ms, color='r')
+        a.plot(tn+pi/omegaF/2, phi_m, ls='', marker='x', markeredgewidth=mw, markersize=ms, color='g')
+   
+   
     ax2 = fig.add_subplot(212)
-    ax2.plot(t, lamb*omega)
-    ax2.plot(t, omegaF + ones(size(t))*lamb*pi, t, omegaF - ones(size(t))*lamb*pi, ls='--',color='k')
-    ax2.plot(t, omega_bar_p * ones(size(t)), t, omega_bar_m * ones(size(t)), t, omega_bar_avg * ones(size(t)),ls=':')
-    plt.xlim([0, t_end])
+    ax2.set_xlim([0,t_end])
+    ax2.set_ylim([-10,110])
+    ax2.set_xlabel('t')
+    ax2.set_ylabel(r'$\displaystyle \omega$', size=80)
+    
+    for tick in ax2.xaxis.get_major_ticks():
+        tick.label.set_fontsize(40)
+    for tick in ax2.yaxis.get_major_ticks():
+        tick.label.set_fontsize(40)
+    
+    ax2_subax1 = create_subax(fig, ax2, [0.67,0.1,0.3,0.5], 
+                              xlimit=[5.55,5.75], ylimit=[omega_bar_avg-3,omega_bar_avg+2.5],
+                              xticks=[5.6,5.7], yticks=[100-3,100,100+3], side='b',
+                              )
+    ax2_subax2 = create_subax(fig, ax2, [0.2,0.1,0.3,0.5], 
+                              xlimit=[0.15,0.35], ylimit=[27,47],
+                              xticks=[0.2,0.3], yticks=[30,35,40,45], side='r',
+                              )
+    axes_plot = [ax2, ax2_subax1, ax2_subax2]
+    
+    for a in axes_plot:
+        if a == ax2:
+            mw = 2.0
+            ms = 4.0
+        else:
+            mw = 4.0
+            ms = 10.0
+            
+            #plot cos = 0
+            tx = arange((pi/2)/omegaF,t_end,pi/omegaF   )
+            for i in tx:
+                a.plot([i,i],[0,110],ls=':',lw=2,color='k')
+        
+        if a == ax2_subax1:
+            a.plot(t, omega_bar_avg*np.ones(size(t)), ls='-.',lw=4,color='k')
+                
+        a.plot(t, lamb*omega, color='b', lw=6, ls='-')                    
+        a.plot(tn+pi/omegaF/2+0.0005, lamb*omega_p, ls='', marker='x', markeredgewidth=mw, markersize=ms, color='r')
+        a.plot(tn+pi/omegaF/2, lamb*omega_m, ls='', marker='x', markeredgewidth=mw, markersize = ms, color='g')
+        a.plot(t, lamb*omega_avg, ls='--',lw=4, color='k')
+
+
+def plot_afo_periodic():
+    mp.rc('lines', lw=4)
+    mp.rc('font', size=60)
+    
+    K = 10.**7
+    omegaF = 100.
+    lamb = 1.
+    dt = 10**-7
+    save_dt = 10**-4
+    t_end = 6.
+    t_start = 0.
+    omega0 = 20./lamb
+    phi0 = 0.
+    
+    #initialize an AFO object
+    afo_obj = afos.PhaseAFO(K,omegaF,lamb)
+    #run an integration
+    res = afos.integrate_afo(afo_obj,t_start,t_end,np.array([phi0,omega0]),dt,save_dt)
+
+    #generate data to be plotted    
+    t = res[0,:]
+    phi = res[1,:]
+    omega = res[2,:]
+
+    omega_bar_p = pi / (1 - exp(-lamb*pi/omegaF))
+    omega_bar_m = pi / (exp(lamb*pi/omegaF) - 1)
+    omega_bar_avg = 0.5*(omega_bar_p + omega_bar_m)
+
+    print omega_bar_avg
+    
+    tn = arange(0,t_end,pi/omegaF)
+    omega_p = (omega[(np.abs(t-pi/omegaF/2)).argmin()]+pi - omega_bar_p)*exp(-lamb * tn) + omega_bar_p
+    omega_m = (omega[(np.abs(t-pi/omegaF/2)).argmin()] - omega_bar_m)*exp(-lamb * tn) + omega_bar_m
+    omega_avg = (omega0 -omega_bar_avg) * exp(-lamb*t) + omega_bar_avg
+
+    phi_m = zeros(size(tn))
+    phi_m[0] = phi[(np.abs(t-pi/omegaF/2)).argmin()]
+    for i in range(1,size(tn)):
+        phi_m[i] = phi_m[i-1] + pi
+    phi_p = phi_m+pi
+
+    #plot stuff
+    fig = plt.figure(1)
+    
+    m = plt.get_current_fig_manager()
+    m.resize(1591, 1273)
+    
+    fig.set_size_inches([ 19.8875,  15.9125])
+       
+    #axes 1
+    ax1 = fig.add_subplot(211)
+    ax1.set_xlim([0, t_end])
+    ax1.set_ylim([-10, 650])
+    ax1.set_ylabel(r'$\displaystyle \phi$', size=80)
+       
+    for tick in ax1.xaxis.get_major_ticks():
+        tick.label.set_fontsize(40)
+    for tick in ax1.yaxis.get_major_ticks():
+        tick.label.set_fontsize(40)
+       
+    ax1_subax1 = create_subax(fig, ax1, [0.68,0.1,0.3,0.5], 
+                              xlimit=[5.55,5.75], ylimit=[550,580],
+                              xticks=[5.6,5.7], yticks=[550,560,570], side='b',
+                              )
+    
+    ax1_subax2 = create_subax(fig, ax1, [0.05,0.49,0.3,0.5], 
+                              xlimit=[0.15,0.35], ylimit=[10,40],
+                              xticks=[0.2,0.3], yticks=[15,25,35], side='t',
+                              )
+    axes_plot = [ax1, ax1_subax1, ax1_subax2]
+    for a in axes_plot:
+        if a == ax1:
+            mw = 2.0
+            ms = 4.0
+        else:
+            mw = 4.0
+            ms = 10.0
+            
+            #plot cos = 0
+            tx = arange((pi/2)/omegaF,t_end,pi/omegaF   )
+            for i in tx:
+                a.plot([i,i],[0,650],ls=':',lw=2,color='k')
+                
+        a.plot(t, phi, color='b', lw=6, ls='-')
+        a.plot(tn+pi/omegaF/2+0.0005, phi_p, ls='', marker='x', markeredgewidth=mw, markersize=ms, color='r')
+        a.plot(tn+pi/omegaF/2, phi_m, ls='', marker='x', markeredgewidth=mw, markersize=ms, color='g')
+   
+   
+    ax2 = fig.add_subplot(212)
+    ax2.set_xlim([0,t_end])
+    ax2.set_ylim([-10,110])
+    ax2.set_xlabel('t')
+    ax2.set_ylabel(r'$\displaystyle \omega$', size=80)
+    
+    for tick in ax2.xaxis.get_major_ticks():
+        tick.label.set_fontsize(40)
+    for tick in ax2.yaxis.get_major_ticks():
+        tick.label.set_fontsize(40)
+    
+    ax2_subax1 = create_subax(fig, ax2, [0.67,0.1,0.3,0.5], 
+                              xlimit=[5.55,5.75], ylimit=[omega_bar_avg-3,omega_bar_avg+2.5],
+                              xticks=[5.6,5.7], yticks=[100-3,100,100+3], side='b',
+                              )
+    ax2_subax2 = create_subax(fig, ax2, [0.2,0.1,0.3,0.5], 
+                              xlimit=[0.15,0.35], ylimit=[27,47],
+                              xticks=[0.2,0.3], yticks=[30,35,40,45], side='r',
+                              )
+    axes_plot = [ax2, ax2_subax1, ax2_subax2]
+    
+    for a in axes_plot:
+        if a == ax2:
+            mw = 2.0
+            ms = 4.0
+        else:
+            mw = 4.0
+            ms = 10.0
+            
+            #plot cos = 0
+            tx = arange((pi/2)/omegaF,t_end,pi/omegaF   )
+            for i in tx:
+                a.plot([i,i],[0,110],ls=':',lw=2,color='k')
+        
+        if a == ax2_subax1:
+            a.plot(t, omega_bar_avg*np.ones(size(t)), ls='-.',lw=4,color='k')
+                
+        a.plot(t, lamb*omega, color='b', lw=6, ls='-')                    
+        a.plot(tn+pi/omegaF/2+0.0005, lamb*omega_p, ls='', marker='x', markeredgewidth=mw, markersize=ms, color='r')
+        a.plot(tn+pi/omegaF/2, lamb*omega_m, ls='', marker='x', markeredgewidth=mw, markersize = ms, color='g')
+        a.plot(t, lamb*omega_avg, ls='--',lw=4, color='k')
+        
+         
+        
+    
+    
+def create_subax(fig, ax, rect, xlimit=[], ylimit=[], xticks=[], yticks=[], side='b', xticklab=[], yticklab=[]):
+    box = ax.get_position()
+    width = box.width
+    height = box.height
+    inax_position  = ax.transAxes.transform(rect[0:2])
+    transFigure = fig.transFigure.inverted()
+    infig_position = transFigure.transform(inax_position)
+    x = infig_position[0]
+    y = infig_position[1]
+    width *= rect[2]
+    height *= rect[3]  # <= Typo was here
+    sub_ax = fig.add_axes([x,y,width,height])
+    
+    if xlimit:
+        sub_ax.set_xlim(xlimit)
+    if ylimit:
+        sub_ax.set_ylim(ylimit)
+
+    for tick in sub_ax.xaxis.get_major_ticks():
+        tick.label.set_fontsize(30)
+    for tick in sub_ax.yaxis.get_major_ticks():
+        tick.label.set_fontsize(30)
+
+    
+    sub_ax.set_xticks(xticks)
+    sub_ax.set_yticks(yticks)
+    if xticklab:
+        sub_ax.set_xticklabels(xticklab)
+    if yticklab:
+        sub_ax.set_yticklabels(yticklab)
+    
+    if xlimit and ylimit:
+        rect1 = mp.patches.Rectangle((xlimit[0],ylimit[0]), xlimit[1]-xlimit[0], ylimit[1]-ylimit[0], 
+                                    color='k', fill=False, lw=2)
+        ax.add_patch(rect1)
+        transData = ax.transData.inverted()
+        if side == 'b':
+            subax_pos1 = transData.transform(ax.transAxes.transform(np.array(rect[0:2])+np.array([0,rect[3]])))
+            subax_pos2 = transData.transform(ax.transAxes.transform(np.array(rect[0:2])+np.array([rect[2],rect[3]]))) 
+            ax.plot([xlimit[0],subax_pos1[0]],[ylimit[0],subax_pos1[1]], color='k', lw=2)
+            ax.plot([xlimit[1],subax_pos2[0]],[ylimit[0],subax_pos2[1]], color='k', lw=2)
+        elif side == 'r':
+            subax_pos1 = transData.transform(ax.transAxes.transform(np.array(rect[0:2])+np.array([0,rect[3]])))
+            subax_pos2 = transData.transform(ax.transAxes.transform(np.array(rect[0:2]))) 
+            ax.plot([xlimit[1],subax_pos1[0]],[ylimit[1],subax_pos1[1]], color='k', lw=2)
+            ax.plot([xlimit[1],subax_pos2[0]],[ylimit[0],subax_pos2[1]], color='k', lw=2)
+        elif side == 't':
+            subax_pos1 = transData.transform(ax.transAxes.transform(np.array(rect[0:2])))
+            subax_pos2 = transData.transform(ax.transAxes.transform(np.array(rect[0:2])+np.array([rect[2],0]))) 
+            ax.plot([xlimit[0],subax_pos1[0]],[ylimit[1],subax_pos1[1]], color='k', lw=2)
+            ax.plot([xlimit[1],subax_pos2[0]],[ylimit[1],subax_pos2[1]], color='k', lw=2)
+    
+    return sub_ax
+    
+    
+    
     
 
  

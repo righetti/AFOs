@@ -40,6 +40,7 @@ void PhaseAFO::integrate(double t_init, double t_end,
   y.resize(2,length);
   t.resize(length);
   y.col(0) = init;
+  t(0) = t_init;
 
   for(int i=1; i<length; ++i)
   {

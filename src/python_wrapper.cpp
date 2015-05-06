@@ -10,13 +10,15 @@
 #include <boost/python.hpp>
 #include <numpy/arrayobject.h>
 
+#include <cstdio>
+
 #include "PhaseAFO.h"
 
 
 using namespace boost::python;
 
 
-numeric::array integrate_afo(PhaseAFO& afo, double t_init, double t_end,
+boost::python::object integrate_afo(PhaseAFO& afo, double t_init, double t_end,
                    numeric::array& init, double dt=0.001,
                    double save_dt=0.001)
 {
@@ -42,7 +44,6 @@ numeric::array integrate_afo(PhaseAFO& afo, double t_init, double t_end,
     res[make_tuple(2,i)] = y(1,i);
   }
 
-
   return res;
 }
 
@@ -51,8 +52,8 @@ BOOST_PYTHON_FUNCTION_OVERLOADS(integrate_afo_overloads, integrate_afo, 4, 6)
 BOOST_PYTHON_MODULE(afos)
 {
   //important to have correct array passing between python and c++
-  import_array();
   boost::python::numeric::array::set_module_and_type("numpy", "ndarray");
+  import_array();
 
 
   class_<PhaseAFO>("PhaseAFO", init<double,double,double>())
