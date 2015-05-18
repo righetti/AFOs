@@ -4,14 +4,13 @@ from scipy import *
 from numpy import *
 
 
-K =  10000
+K =  10000.
 omegaF = 30
 lamb = 1.
 dt = 0.00001
 save_dt = 0.001
-t_end = 20
-a = afos.PhaseAFO(K,omegaF,lamb)
-res = afos.integrate_afo(a,0,t_end,array((0.,10)),dt, save_dt)
+t_end = 20.
+res = afos.integrate_afo(0.,t_end,K,lamb,array([0.,10]),array([omegaF]),array([1.]),array([0.]),dt, save_dt)
 t = res[0,:]
 phi = res[1,:]
 omega = res[2,:]

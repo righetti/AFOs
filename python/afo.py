@@ -37,12 +37,32 @@ mp.rc('text', usetex = True)
 def coth(z):
     return (exp(z)+exp(-z))/(exp(z)-exp(-z))
 
+def periodic_f(t,freq,amp,phase):
+
+    f = 0
+    for i in range(freq.size):
+        f = f + cos(freq(i)*t + phase(i)) * amp(i)
+        
+    return f
+
+def find_roots(freq,amp,phase):
+    omegaF = freq(0)
+    
+    #we sample
+    t = np.linspace(0.0,2*pi/omegaF,10000)
+    
+    f = zeros(size(t))
+    
+
 def plot_afo_3periodic():
     mp.rc('lines', lw=4)
     mp.rc('font', size=60)
     
     K = 10.**7
-    omegaF = 100.
+    omegaF = 30.
+    freq = omegaF * np.array([1.,2.,3.])
+    amp = np.array([1.3,1.,1.4])
+    phase = np.array([0.4,0.,1.3])
     lamb = 1.
     dt = 10**-7
     save_dt = 10**-4
@@ -51,10 +71,9 @@ def plot_afo_3periodic():
     omega0 = 20./lamb
     phi0 = 0.
     
-    #initialize an AFO object
-    afo_obj = afos.PhaseAFO(K,omegaF,lamb)
     #run an integration
-    res = afos.integrate_afo(afo_obj,t_start,t_end,np.array([phi0,omega0]),dt,save_dt)
+    res = afos.integrate_afo(t_start,t_end,K,lamb,np.array([phi0,omega0]),
+                             freq,amp,phase,dt,save_dt)
 
     #generate data to be plotted    
     t = res[0,:]
@@ -72,60 +91,16 @@ def plot_afo_3periodic():
     omega_m = (omega[(np.abs(t-pi/omegaF/2)).argmin()] - omega_bar_m)*exp(-lamb * tn) + omega_bar_m
     omega_avg = (omega0 -omega_bar_avg) * exp(-lamb*t) + omega_bar_avg
 
-    phi_m = zeros(size(tn))
-    phi_m[0] = phi[(np.abs(t-pi/omegaF/2)).argmin()]
-    for i in range(1,size(tn)):
-        phi_m[i] = phi_m[i-1] + pi
-    phi_p = phi_m+pi
-
     #plot stuff
     fig = plt.figure(1)
     
-    m = plt.get_current_fig_manager()
-    m.resize(1591, 1273)
+#    m = plt.get_current_fig_manager()
+#    m.resize(1591, 1273)
     
-    fig.set_size_inches([ 19.8875,  15.9125])
+#    fig.set_size_inches([ 19.8875,  15.9125])
        
     #axes 1
-    ax1 = fig.add_subplot(211)
-    ax1.set_xlim([0, t_end])
-    ax1.set_ylim([-10, 650])
-    ax1.set_ylabel(r'$\displaystyle \phi$', size=80)
-       
-    for tick in ax1.xaxis.get_major_ticks():
-        tick.label.set_fontsize(40)
-    for tick in ax1.yaxis.get_major_ticks():
-        tick.label.set_fontsize(40)
-       
-    ax1_subax1 = create_subax(fig, ax1, [0.68,0.1,0.3,0.5], 
-                              xlimit=[5.55,5.75], ylimit=[550,580],
-                              xticks=[5.6,5.7], yticks=[550,560,570], side='b',
-                              )
-    
-    ax1_subax2 = create_subax(fig, ax1, [0.05,0.49,0.3,0.5], 
-                              xlimit=[0.15,0.35], ylimit=[10,40],
-                              xticks=[0.2,0.3], yticks=[15,25,35], side='t',
-                              )
-    axes_plot = [ax1, ax1_subax1, ax1_subax2]
-    for a in axes_plot:
-        if a == ax1:
-            mw = 2.0
-            ms = 4.0
-        else:
-            mw = 4.0
-            ms = 10.0
-            
-            #plot cos = 0
-            tx = arange((pi/2)/omegaF,t_end,pi/omegaF   )
-            for i in tx:
-                a.plot([i,i],[0,650],ls=':',lw=2,color='k')
-                
-        a.plot(t, phi, color='b', lw=6, ls='-')
-        a.plot(tn+pi/omegaF/2+0.0005, phi_p, ls='', marker='x', markeredgewidth=mw, markersize=ms, color='r')
-        a.plot(tn+pi/omegaF/2, phi_m, ls='', marker='x', markeredgewidth=mw, markersize=ms, color='g')
-   
-   
-    ax2 = fig.add_subplot(212)
+    ax2 = fig.add_subplot(111)
     ax2.set_xlim([0,t_end])
     ax2.set_ylim([-10,110])
     ax2.set_xlabel('t')
@@ -182,10 +157,10 @@ def plot_afo_periodic():
     omega0 = 20./lamb
     phi0 = 0.
     
-    #initialize an AFO object
-    afo_obj = afos.PhaseAFO(K,omegaF,lamb)
+    
     #run an integration
-    res = afos.integrate_afo(afo_obj,t_start,t_end,np.array([phi0,omega0]),dt,save_dt)
+    res = afos.integrate_afo(t_start,t_end,K,lamb,np.array([phi0,omega0]),
+                             np.array([omegaF]),np.array([1.0]),np.array([0.0]),dt,save_dt)
 
     #generate data to be plotted    
     t = res[0,:]
