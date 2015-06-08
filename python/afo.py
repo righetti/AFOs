@@ -39,20 +39,24 @@ def coth(z):
 
 def periodic_f(t,freq,amp,phase):
 
-    f = 0
-    for i in range(freq.size):
-        f = f + cos(freq(i)*t + phase(i)) * amp(i)
+    f = zeros(size(t))
+    for i in range(size(freq)):
+        f = f + cos(freq[i]*t + phase[i]) * amp[i]
         
     return f
 
 def find_roots(freq,amp,phase):
-    omegaF = freq(0)
+    omegaF = freq[0]
     
     #we sample
     t = np.linspace(0.0,2*pi/omegaF,10000)
     
-    f = zeros(size(t))
-    
+    f = periodic_f(t, freq, amp, phase)
+    ind = []
+    for i in range(size(f)-1): 
+        if(f[i]*f[i+1]<0):
+            ind.append(i)
+    return t[ind]
 
 def plot_afo_3periodic():
     mp.rc('lines', lw=4)
@@ -63,7 +67,7 @@ def plot_afo_3periodic():
     freq = omegaF * np.array([1.,2.,3.])
     amp = np.array([1.3,1.,1.4])
     phase = np.array([0.4,0.,1.3])
-    lamb = 1.
+    lamb = 1
     dt = 10**-7
     save_dt = 10**-4
     t_end = 6.
@@ -80,11 +84,17 @@ def plot_afo_3periodic():
     phi = res[1,:]
     omega = res[2,:]
 
-    omega_bar_p = pi / (1 - exp(-lamb*pi/omegaF))
-    omega_bar_m = pi / (exp(lamb*pi/omegaF) - 1)
-    omega_bar_avg = 0.5*(omega_bar_p + omega_bar_m)
+    roots = find_roots(freq, amp, phase)
+    n_roots = size(roots)
+    print 'num roots is '
+    print n_roots
 
-    print omega_bar_avg
+    omega_bar_p = omegaF * n_roots * (0.5 / lamb) + pi + omegaF * 0.5 * sum(roots[:-1])
+    omega_bar_m = omegaF * n_roots * (0.5 / lamb) + omegaF * 0.5 * sum(roots[:-1])
+    omega_bar_avg = omegaF * n_roots * (0.5 / lamb) + pi*0.5 + omegaF * 0.5 * sum(roots[:-1])
+
+    print omega_bar_avg * lamb
+    print roots
     
     tn = arange(0,t_end,pi/omegaF)
     omega_p = (omega[(np.abs(t-pi/omegaF/2)).argmin()]+pi - omega_bar_p)*exp(-lamb * tn) + omega_bar_p
@@ -111,15 +121,16 @@ def plot_afo_3periodic():
     for tick in ax2.yaxis.get_major_ticks():
         tick.label.set_fontsize(40)
     
-    ax2_subax1 = create_subax(fig, ax2, [0.67,0.1,0.3,0.5], 
-                              xlimit=[5.55,5.75], ylimit=[omega_bar_avg-3,omega_bar_avg+2.5],
-                              xticks=[5.6,5.7], yticks=[100-3,100,100+3], side='b',
-                              )
-    ax2_subax2 = create_subax(fig, ax2, [0.2,0.1,0.3,0.5], 
-                              xlimit=[0.15,0.35], ylimit=[27,47],
-                              xticks=[0.2,0.3], yticks=[30,35,40,45], side='r',
-                              )
-    axes_plot = [ax2, ax2_subax1, ax2_subax2]
+#     ax2_subax1 = create_subax(fig, ax2, [0.67,0.1,0.3,0.5], 
+#                               xlimit=[5.55,5.75], ylimit=[omega_bar_avg-3,omega_bar_avg+2.5],
+#                               xticks=[5.6,5.7], yticks=[100-3,100,100+3], side='b',
+#                               )
+#     ax2_subax2 = create_subax(fig, ax2, [0.2,0.1,0.3,0.5], 
+#                               xlimit=[0.15,0.35], ylimit=[27,47],
+#                               xticks=[0.2,0.3], yticks=[30,35,40,45], side='r',
+#                               )
+#     axes_plot = [ax2, ax2_subax1, ax2_subax2]
+    axes_plot = [ax2]
     
     for a in axes_plot:
         if a == ax2:
@@ -134,8 +145,8 @@ def plot_afo_3periodic():
             for i in tx:
                 a.plot([i,i],[0,110],ls=':',lw=2,color='k')
         
-        if a == ax2_subax1:
-            a.plot(t, omega_bar_avg*np.ones(size(t)), ls='-.',lw=4,color='k')
+#         if a == ax2_subax1:
+#             a.plot(t, omega_bar_avg*np.ones(size(t)), ls='-.',lw=4,color='k')
                 
         a.plot(t, lamb*omega, color='b', lw=6, ls='-')                    
         a.plot(tn+pi/omegaF/2+0.0005, lamb*omega_p, ls='', marker='x', markeredgewidth=mw, markersize=ms, color='r')
