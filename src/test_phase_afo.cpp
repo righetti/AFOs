@@ -18,7 +18,8 @@ int main(int argc, char **argv)
   Eigen::Vector2d y_init;
   y_init << 0.0, 10.0;
 
-  PhaseAFO my_afo(1000.0, 100, 1);
+  PhaseAFO my_afo;
+  my_afo.init(1000.0, 100, 1);
   Eigen::VectorXd t;
   Eigen::MatrixXd y;
 

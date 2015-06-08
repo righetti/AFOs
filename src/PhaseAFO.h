@@ -12,10 +12,16 @@
 
 class PhaseAFO {
 public:
-  PhaseAFO(double K, double omegaF, double lambda);
+  PhaseAFO();
   ~PhaseAFO();
 
   Eigen::Vector2d dydt(const Eigen::Vector2d& y, double t);
+
+  void init(double K, double omegaF, double lambda);
+  void init(double K, const Eigen::VectorXd& freq,
+           const Eigen::VectorXd& amp, const Eigen::VectorXd& phase,
+           double lambda);
+
 
   void integrate(double t_init, double t_end,
                             const Eigen::Vector2d& init,
@@ -25,8 +31,11 @@ public:
 
 private:
   double K_;
-  double omegaF_;
   double lambda_;
+
+  bool initialized_;
+
+  Eigen::VectorXd freq_, amp_, phase_;
 
 };
 
