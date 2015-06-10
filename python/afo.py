@@ -89,9 +89,12 @@ def plot_afo_3periodic():
     print 'num roots is '
     print n_roots
 
-    omega_bar_p = omegaF * n_roots * (0.5 / lamb) + pi + omegaF * 0.5 * sum(roots[:-1])
-    omega_bar_m = omegaF * n_roots * (0.5 / lamb) + omegaF * 0.5 * sum(roots[:-1])
-    omega_bar_avg = omegaF * n_roots * (0.5 / lamb) + pi*0.5 + omegaF * 0.5 * sum(roots[:-1])
+#     omega_bar_p = omegaF * n_roots * (0.5 / lamb) + pi + omegaF * 0.5 * sum(roots[:-1])
+#     omega_bar_m = omegaF * n_roots * (0.5 / lamb) + omegaF * 0.5 * sum(roots[:-1])
+#     omega_bar_avg = omegaF * n_roots * (0.5 / lamb) + pi*0.5 + omegaF * 0.5 * sum(roots[:-1])
+    omega_bar_p = pi / (exp(lamb*2*pi/omegaF)-1) * (sum(exp(lamb*roots)))
+    omega_bar_m = pi / (exp(lamb*2*pi/omegaF)-1) * (1 + sum(exp(lamb*roots[:-1])))
+    omega_bar_avg = pi / (2*(exp(lamb*2*pi/omegaF)-1)) * (1 + exp(lamb*2*pi/omegaF) + 2*sum(exp(lamb*roots[:-1])))
 
     print omega_bar_avg * lamb
     print roots
