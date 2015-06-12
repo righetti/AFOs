@@ -34,9 +34,11 @@ mp.rc('savefig', format='pdf')
 mp.rc('font', size = 40)
 mp.rc('text', usetex = True)
 
+#cotangent hyperbolic function
 def coth(z):
     return (exp(z)+exp(-z))/(exp(z)-exp(-z))
 
+#returns f = sum of amp*cos(omega*t+phase)
 def periodic_f(t,freq,amp,phase):
 
     f = zeros(size(t))
@@ -45,7 +47,7 @@ def periodic_f(t,freq,amp,phase):
         
     return f
 
-##returns the points of the map for each zero crossing in times
+##returns the points of the +- omega maps for each zero crossing in times
 ##returns the +map and the -map
 def compute_maps(times, omega_p0, omega_m0, lamb):
     omega_p = np.zeros(size(times))
@@ -62,11 +64,8 @@ def compute_maps(times, omega_p0, omega_m0, lamb):
 #returns the zeros of a periodic function
 #the zeros within the period
 #we assume freq[0] is the base frequency
-def find_roots(freq,amp,phase):
+def find_roots(t,freq,amp,phase):
     omegaF = freq[0]
-    
-    #we sample
-    t = np.linspace(0.0,2*pi/omegaF,10000)
     
     f = periodic_f(t, freq, amp, phase)
     ind = []
@@ -87,7 +86,7 @@ def plot_afo_3periodic():
     lamb = 1
     dt = 10**-7
     save_dt = 10**-3
-    t_end = 6.
+    t_end = 8.
     t_start = 0.
     omega0 = 20./lamb
     phi0 = 0.
@@ -101,24 +100,31 @@ def plot_afo_3periodic():
     phi = res[1,:]
     omega = res[2,:]
 
-    roots = find_roots(freq, amp, phase)
+    deltaT = np.linspace(0.0,2*pi/omegaF,10000)
+    roots = find_roots(deltaT, freq, amp, phase)
+    roots_corrected = roots + (2.*pi/omegaF - roots[-1])
     n_roots = size(roots)
     print 'num roots is ', n_roots
+    print 'roots ', roots
+    print 'roots corrected', roots_corrected
 
 #     omega_bar_p = omegaF * n_roots * (0.5 / lamb) + pi + omegaF * 0.5 * sum(roots[:-1])
 #     omega_bar_m = omegaF * n_roots * (0.5 / lamb) + omegaF * 0.5 * sum(roots[:-1])
 #     omega_bar_avg = omegaF * n_roots * (0.5 / lamb) + pi*0.5 + omegaF * 0.5 * sum(roots[:-1])
-    omega_bar_p = pi / (exp(lamb*2*pi/omegaF)-1) * (sum(exp(lamb*roots)))
-    omega_bar_m = pi / (exp(lamb*2*pi/omegaF)-1) * (1 + sum(exp(lamb*roots[:-1])))
-    omega_bar_avg = pi / (2*(exp(lamb*2*pi/omegaF)-1)) * (1 + exp(lamb*2*pi/omegaF) + 2*sum(exp(lamb*roots[:-1])))
+    omega_bar_p = pi / (exp(lamb*2*pi/omegaF)-1) * (sum(exp(lamb*roots_corrected)))
+    omega_bar_m = pi / (exp(lamb*2*pi/omegaF)-1) * (1 + sum(exp(lamb*roots_corrected[:-1])))
+    omega_bar_avg = pi / (2*(exp(lamb*2*pi/omegaF)-1)) * (1 + exp(lamb*2*pi/omegaF) + 2*sum(exp(lamb*roots_corrected[:-1])))
 
-    print 'omega_bar ', omega_bar_avg * lamb
+    print 'omega_bar o+ and o-', omega_bar_avg * lamb, omega_bar_p, omega_bar_m
+    
+    print 'approx omega_bar ', omegaF * n_roots/2 + lamb * pi / 2. + omegaF/2. * sum(lamb*roots_corrected[:-1])
     
     tn = np.array([])
-    for i in range(int(t_end / (2*pi/omegaF))):
+    for i in range(int(t_end / (2*pi/omegaF))+1):
         tn = np.append(tn, i*2*pi/omegaF + roots)
-    omega_p, omega_m = compute_maps(tn, omega0*exp(-lamb*roots[0])+pi, omega0*exp(-lamb*roots[0]), lamb)    
-    omega_avg = (omega0 -omega_bar_avg) * exp(-lamb*t) + omega_bar_avg
+    omega_p, omega_m = compute_maps(tn, omega0*exp(-lamb*roots[0])+pi, omega0*exp(-lamb*roots[0]), lamb)
+    print 'omega_p omega_m', omega_p[-4:], omega_m[-4:]    
+    omega_avg = (omega0 -n_roots/2.*omegaF) * exp(-lamb*t) + n_roots/2.*omegaF
     tn = tn
     #plot stuff
     fig = plt.figure(1)
@@ -131,7 +137,7 @@ def plot_afo_3periodic():
     #axes 1
     ax2 = fig.add_subplot(111)
     ax2.set_xlim([0,t_end])
-    ax2.set_ylim([-10,80])
+    ax2.set_ylim([0,70])
     ax2.set_xlabel('t')
     ax2.set_ylabel(r'$\displaystyle \omega$', size=80)
     
@@ -141,12 +147,12 @@ def plot_afo_3periodic():
         tick.label.set_fontsize(40)
     
     ax2_subax1 = create_subax(fig, ax2, [0.67,0.1,0.3,0.5], 
-                              xlimit=[5.05,5.45], ylimit=[omega_bar_avg-4,omega_bar_avg+4],
-                              xticks=[5.6,5.7], yticks=[60-3,60,60+3], side='b',
+                              xlimit=[6.5,6.9], ylimit=[60-4,60+4],
+                              xticks=[6.5,6.7,6.9], yticks=[60-3,60,60+3], side='b',
                               )
-    ax2_subax2 = create_subax(fig, ax2, [0.2,0.1,0.3,0.5], 
-                              xlimit=[0.15,0.55], ylimit=[23,35],
-                              xticks=[0.2,0.3], yticks=[30,35,40,45], side='r',
+    ax2_subax2 = create_subax(fig, ax2, [0.25,0.1,0.3,0.5], 
+                              xlimit=[0.15,0.55], ylimit=[25,37],
+                              xticks=[0.2,0.35,0.5], yticks=[25,30,35], side='r',
                               )
     axes_plot = [ax2, ax2_subax1, ax2_subax2]
     
