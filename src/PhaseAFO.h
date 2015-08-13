@@ -15,8 +15,6 @@ public:
   PhaseAFO();
   ~PhaseAFO();
 
-  Eigen::Vector2d dydt(const Eigen::Vector2d& y, double t);
-
   void init(double K, double omegaF, double lambda);
   void init(double K, const Eigen::VectorXd& freq,
            const Eigen::VectorXd& amp, const Eigen::VectorXd& phase,
@@ -30,6 +28,8 @@ public:
                             double save_dt=0.001);
 
 private:
+  Eigen::Vector2d dydt(const Eigen::Vector2d& y, double t);
+
   double K_;
   double lambda_;
 

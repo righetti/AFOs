@@ -74,6 +74,89 @@ def find_roots(t,freq,amp,phase):
             ind.append(i)
     return t[ind]
 
+def plot_afo_3aperiodic():
+    mp.rc('lines', lw=4)
+    mp.rc('font', size=60)
+    
+    K = 10.**7
+    omegaF = 30.
+    freq = omegaF * np.array([1.,sqrt(2.),pi/sqrt(2.)])
+    amp = np.array([1.3,1.,1.4])
+    phase = np.array([0.,0.,0.])
+    lamb = 1
+    dt = 10**-8
+    save_dt = 10**-3
+    t_end = 30.
+    t_start = 0.
+    omega0 = 20./lamb
+    phi0 = 0.
+    
+    #run an integration
+    res = afos.integrate_afo(t_start,t_end,K,lamb,np.array([phi0,omega0]),
+                             freq,amp,phase,dt,save_dt)
+
+    #generate data to be plotted    
+    t = res[0,:]
+    phi = res[1,:]
+    omega = res[2,:]
+
+    roots = find_roots(t, freq, amp, phase)
+    roots_corrected = roots + (2.*pi/omegaF - roots[-1])
+    n_roots = size(roots)
+    print 'num roots is ', n_roots
+    #print 'roots ', roots
+    #print 'roots corrected', roots_corrected
+    
+    omega_p, omega_m = compute_maps(roots_corrected, omega0*exp(-lamb*roots[0])+pi, omega0*exp(-lamb*roots[0]), lamb)    
+
+    #plot stuff
+    fig = plt.figure(1)
+    
+    m = plt.get_current_fig_manager()
+    m.resize(1591, 1273)
+    
+    fig.set_size_inches([ 19.8875,  15.9125])
+       
+    #axes 1
+    ax2 = fig.add_subplot(111)
+    ax2.set_xlim([0,t_end])
+    ax2.set_ylim([0,70])
+    ax2.set_xlabel('t')
+    ax2.set_ylabel(r'$\displaystyle \omega$', size=80)
+    
+    for tick in ax2.xaxis.get_major_ticks():
+        tick.label.set_fontsize(40)
+    for tick in ax2.yaxis.get_major_ticks():
+        tick.label.set_fontsize(40)
+    
+#     ax2_subax1 = create_subax(fig, ax2, [0.67,0.1,0.3,0.5], 
+#                               xlimit=[6.5,6.9], ylimit=[60-4,60+4],
+#                               xticks=[6.5,6.7,6.9], yticks=[60-3,60,60+3], side='b',
+#                               )
+#     ax2_subax2 = create_subax(fig, ax2, [0.25,0.1,0.3,0.5], 
+#                               xlimit=[0.15,0.55], ylimit=[25,37],
+#                               xticks=[0.2,0.35,0.5], yticks=[25,30,35], side='r',
+#                               )
+#     axes_plot = [ax2, ax2_subax1, ax2_subax2]
+    axes_plot = [ax2]
+        
+    for a in axes_plot:
+        if a == ax2:
+            mw = 2.0
+            ms = 4.0
+        else:
+            mw = 4.0
+            ms = 10.0
+            
+            #plot cos = 0
+            tx = arange((pi/2)/omegaF,t_end,pi/omegaF   )
+            for i in tx:
+                a.plot([i,i],[0,110],ls=':',lw=2,color='k')
+                        
+        a.plot(t, lamb*omega, color='b', lw=6, ls='-')                    
+        a.plot(roots, lamb*omega_p, ls='', marker='x', markeredgewidth=mw, markersize=ms, color='r')
+        a.plot(roots, lamb*omega_m, ls='', marker='x', markeredgewidth=mw, markersize = ms, color='g')
+
 def plot_afo_3periodic():
     mp.rc('lines', lw=4)
     mp.rc('font', size=60)
