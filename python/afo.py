@@ -4,6 +4,8 @@ import scipy as sp
 import matplotlib.pyplot as plt
 import matplotlib as mp
 
+import pickle
+
 from afos import afos
 
 from numpy.ma.core import exp
@@ -74,7 +76,7 @@ def find_roots(t,freq,amp,phase):
             ind.append(i)
     return t[ind]
 
-def plot_afo_3aperiodic():
+def plot_afo_3aperiodic(use_saved_data):
     mp.rc('lines', lw=4)
     mp.rc('font', size=60)
     
@@ -91,23 +93,46 @@ def plot_afo_3aperiodic():
     omega0 = 20./lamb
     phi0 = 0.
     
-    #run an integration
-    res = afos.integrate_afo(t_start,t_end,K,lamb,np.array([phi0,omega0]),
-                             freq,amp,phase,dt,save_dt)
+    #run an integration and generate data to be plotted   
+    data_filename = 'plot_afo_3aperiodic_data.pkl'
+    if not use_saved_data:
+#        res = afos.integrate_afo(t_start,t_end,K,lamb,np.array([phi0,omega0]),
+#                                 freq,amp,phase,dt,save_dt)
+        
+        t = res[0,:]
+        phi = res[1,:]
+        omega = res[2,:]
+        
+        roots = find_roots(t, freq, amp, phase)
+        roots_corrected = roots + (2.*pi/omegaF - roots[-1])
+        n_roots = size(roots)
+        print 'num roots is ', n_roots
+        
+        omega_p, omega_m = compute_maps(roots_corrected, omega0*exp(-lamb*roots[0])+pi, omega0*exp(-lamb*roots[0]), lamb)    
 
-    #generate data to be plotted    
-    t = res[0,:]
-    phi = res[1,:]
-    omega = res[2,:]
-
-    roots = find_roots(t, freq, amp, phase)
-    roots_corrected = roots + (2.*pi/omegaF - roots[-1])
-    n_roots = size(roots)
-    print 'num roots is ', n_roots
-    #print 'roots ', roots
-    #print 'roots corrected', roots_corrected
+        data_file = open(data_filename,'wb')     
+        pickle.dump(t, data_file)
+        pickle.dump(phi, data_file)
+        pickle.dump(omega, data_file)
+        pickle.dump(roots,data_file)
+        pickle.dump(roots_corrected,data_file)
+        pickle.dump(n_roots,data_file)
+        pickle.dump(omega_p,data_file)
+        pickle.dump(omega_m,data_file)
+        data_file.close()
+    else:
+        data_file = open(data_filename,'rb')
+        t = pickle.load(data_file)
+        phi = pickle.load(data_file)
+        omega = pickle.load(data_file)
+        roots = pickle.load(data_file)
+        roots_corrected = pickle.load(data_file)
+        n_roots = pickle.load(data_file)
+        omega_p = pickle.load(data_file)
+        omega_m = pickle.load(data_file)
+        data_file.close()
     
-    omega_p, omega_m = compute_maps(roots_corrected, omega0*exp(-lamb*roots[0])+pi, omega0*exp(-lamb*roots[0]), lamb)    
+  
 
     #plot stuff
     fig = plt.figure(1)
@@ -120,7 +145,7 @@ def plot_afo_3aperiodic():
     #axes 1
     ax2 = fig.add_subplot(111)
     ax2.set_xlim([0,t_end])
-    ax2.set_ylim([0,70])
+    ax2.set_ylim([0,65])
     ax2.set_xlabel('t')
     ax2.set_ylabel(r'$\displaystyle \omega$', size=80)
     
@@ -129,16 +154,16 @@ def plot_afo_3aperiodic():
     for tick in ax2.yaxis.get_major_ticks():
         tick.label.set_fontsize(40)
     
-#     ax2_subax1 = create_subax(fig, ax2, [0.67,0.1,0.3,0.5], 
-#                               xlimit=[6.5,6.9], ylimit=[60-4,60+4],
-#                               xticks=[6.5,6.7,6.9], yticks=[60-3,60,60+3], side='b',
-#                               )
-#     ax2_subax2 = create_subax(fig, ax2, [0.25,0.1,0.3,0.5], 
-#                               xlimit=[0.15,0.55], ylimit=[25,37],
-#                               xticks=[0.2,0.35,0.5], yticks=[25,30,35], side='r',
-#                               )
-#     axes_plot = [ax2, ax2_subax1, ax2_subax2]
-    axes_plot = [ax2]
+    ax2_subax1 = create_subax(fig, ax2, [0.6,0.1,0.35,0.4], 
+                               xlimit=[25.95,27.05], ylimit=[52,63],
+                               xticks=[26.,26.5,27], yticks=[53,58,63], side='b',
+                               )
+    ax2_subax2 = create_subax(fig, ax2, [0.15,0.1,0.35,0.4], 
+                               xlimit=[1.95,3.05], ylimit=[36,50],
+                               xticks=[2,2.5,3], yticks=[40,45,50], side='r',
+                               )
+    axes_plot = [ax2, ax2_subax1, ax2_subax2]
+#     axes_plot = [ax2]
         
     for a in axes_plot:
         if a == ax2:
@@ -148,8 +173,8 @@ def plot_afo_3aperiodic():
             mw = 4.0
             ms = 10.0
             
-            #plot cos = 0
-            tx = arange((pi/2)/omegaF,t_end,pi/omegaF   )
+            #plot F(t) = 0
+            tx = find_roots(t, freq, amp, phase)
             for i in tx:
                 a.plot([i,i],[0,110],ls=':',lw=2,color='k')
                         
@@ -200,7 +225,8 @@ def plot_afo_3periodic():
 
     print 'omega_bar o+ and o-', omega_bar_avg * lamb, omega_bar_p, omega_bar_m
     
-    print 'approx omega_bar ', omegaF * n_roots/2 + lamb * pi / 2. + omegaF/2. * sum(lamb*roots_corrected[:-1])
+    print 'approx omega_bar ', pi * n_roots * exp(lamb*2*pi/omegaF) / (exp(lamb*2*pi/omegaF)-1)
+    #0.5*omegaF * n_roots + omegaF/2. * sum(lamb*roots_corrected[:-1])
     
     tn = np.array([])
     for i in range(int(t_end / (2*pi/omegaF))+1):
@@ -247,13 +273,13 @@ def plot_afo_3periodic():
             mw = 4.0
             ms = 10.0
             
-            #plot cos = 0
-            tx = arange((pi/2)/omegaF,t_end,pi/omegaF   )
+            #plot F(t) = 0
+            tx = find_roots(t, freq, amp, phase)
             for i in tx:
                 a.plot([i,i],[0,110],ls=':',lw=2,color='k')
         
-        if a == ax2_subax1:
-            a.plot(t, omega_bar_avg*np.ones(size(t)), ls='-.',lw=4,color='k')
+#         if a == ax2_subax1:
+#             a.plot(t, omega_bar_avg*np.ones(size(t)), ls='-.',lw=4,color='k')
                 
         a.plot(t, lamb*omega, color='b', lw=6, ls='-')                    
         a.plot(tn, lamb*omega_p, ls='', marker='x', markeredgewidth=mw, markersize=ms, color='r')
