@@ -20,11 +20,9 @@ int main(int argc, char **argv)
 
   PhaseAFO my_afo;
   my_afo.init(1000.0, 100, 1);
-  Eigen::VectorXd t;
-  Eigen::MatrixXd y;
-
-  my_afo.integrate(t_init, t_end,y_init, t,y,dt, save_dt);
-
+  my_afo.integrate(t_init, t_end,y_init,dt, save_dt);
+  Eigen::VectorXd t = my_afo.t();
+  Eigen::MatrixXd y = my_afo.y();
 
   //save file
   FILE *save_file = fopen("result.txt","w");
