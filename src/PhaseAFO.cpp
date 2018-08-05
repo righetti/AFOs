@@ -9,6 +9,7 @@
 
 #include <cmath>
 #include <cstdio>
+#include <functional>
 
 PhaseAFO::PhaseAFO()
 {
@@ -29,7 +30,7 @@ void PhaseAFO::init(double K, double omegaF, double lambda)
   initialized_ = true;
 }
 
-void PhaseAFO::init(double K, const Eigen::VectorXd& freq,
+void PhaseAFO::init1(double K, const Eigen::VectorXd& freq,
                const Eigen::VectorXd& amp, const Eigen::VectorXd& phase,
                double lambda)
 {
@@ -50,7 +51,7 @@ PhaseAFO::~PhaseAFO()
 inline Eigen::Vector2d PhaseAFO::dydt(const Eigen::Vector2d& y, double t)
 {
   Eigen::Vector2d dydt;
-  double perturbation = (freq_*t + phase_).unaryExpr(std::ptr_fun(cos)).dot(amp_);
+  double perturbation = ((freq_*t + phase_).array().cos()).matrix().dot(amp_);
   double tt = - K_ * sin(y(0)) * perturbation;
 
   dydt(0) = lambda_ * y(1) + tt;
@@ -61,7 +62,6 @@ inline Eigen::Vector2d PhaseAFO::dydt(const Eigen::Vector2d& y, double t)
 
 void PhaseAFO::integrate(double t_init, double t_end,
                          const Eigen::Vector2d& init,
-                         Eigen::VectorXd& t, Eigen::MatrixXd& y,
                          double dt, double save_dt)
 {
   if(!initialized_)
@@ -72,18 +72,18 @@ void PhaseAFO::integrate(double t_init, double t_end,
   int inner_loop = int(save_dt/dt);
   int length = int((t_end - t_init)/save_dt);
 
-  y.resize(2,length);
-  t.resize(length);
-  y.col(0) = init;
-  t(0) = t_init;
+  y_.resize(2,length);
+  t_.resize(length);
+  y_.col(0) = init;
+  t_(0) = t_init;
 
   Eigen::Vector2d y_tmp;
   for(int i=1; i<length; ++i)
   {
-    y.col(i) = y.col(i-1);
+    y_.col(i) = y_.col(i-1);
     for(int j=0; j<inner_loop; ++j)
-      y.col(i) += dydt(y.col(i),t(i-1)+double(j)*dt) * dt;
-    t(i) = t(i-1) + save_dt;
+      y_.col(i) += dydt(y_.col(i),t_(i-1)+double(j)*dt) * dt;
+    t_(i) = t_(i-1) + save_dt;
   }
 
 }

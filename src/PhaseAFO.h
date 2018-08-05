@@ -16,17 +16,17 @@ public:
   ~PhaseAFO();
 
   void init(double K, double omegaF, double lambda);
-  void init(double K, const Eigen::VectorXd& freq,
+  void init1(double K, const Eigen::VectorXd& freq,
            const Eigen::VectorXd& amp, const Eigen::VectorXd& phase,
            double lambda);
 
 
   void integrate(double t_init, double t_end,
                             const Eigen::Vector2d& init,
-                            Eigen::VectorXd& t, Eigen::MatrixXd& y,
                             double dt=0.001,
                             double save_dt=0.001);
-
+  const Eigen::VectorXd& t(){return t_;};
+  const Eigen::MatrixXd& y(){return y_;};
 private:
   Eigen::Vector2d dydt(const Eigen::Vector2d& y, double t);
 
@@ -36,6 +36,8 @@ private:
   bool initialized_;
 
   Eigen::VectorXd freq_, amp_, phase_;
+  Eigen::MatrixXd y_;
+  Eigen::VectorXd t_;
 
 };
 

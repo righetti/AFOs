@@ -5,23 +5,20 @@
  *      Author: righetti
  */
 
-#define PY_ARRAY_UNIQUE_SYMBOL afos_ARRAY_API
-#define NPY_NO_DEPRECATED_API NPY_1_7_API_VERSION
+//#define PY_ARRAY_UNIQUE_SYMBOL afos_ARRAY_API
+//#define NPY_NO_DEPRECATED_API NPY_1_7_API_VERSION
 
-#include <boost/python.hpp>
-#include <numpy/arrayobject.h>
-
-#include <cstdio>
-
+#include <pybind11/pybind11.h>
+#include <pybind11/eigen.h>
 #include "PhaseAFO.h"
 
 
-using namespace boost::python;
+namespace py = pybind11;
 
-
-boost::python::object integrate_afo(double t_init, double t_end,
-                                    double K, double lambda, numeric::array& init,
-                                    numeric::array& freq, numeric::array& amp, numeric::array& phase,
+/*
+py::object integrate_afo(double t_init, double t_end,
+                                    double K, double lambda, np::ndarray& init,
+                                    np::ndarray& freq, np::ndarray& amp, np::ndarray& phase,
                                     double dt=0.001, double save_dt=0.001)
 {
   PhaseAFO afo;
@@ -52,8 +49,10 @@ boost::python::object integrate_afo(double t_init, double t_end,
   long N[2];
   N[0] = 3;
   N[1] = long(t.size());
-  int nd = 2;
-  numeric::array res = (static_cast<numeric::array>(handle<>(PyArray_SimpleNew(nd,N,NPY_DOUBLE))));
+  tuple shape = make_tuple(N[0],N[1]);
+  np::dtype dtype = np::dtype::get_builtin<double>();
+  np::ndarray res = np::zeros(shape, dtype);
+//  np::ndarray res = (static_cast<np::ndarray>(handle<>(PyArray_SimpleNew(nd,N,NPY_DOUBLE))));
 
   for(int i=0; i<t.size(); ++i)
   {
@@ -64,17 +63,15 @@ boost::python::object integrate_afo(double t_init, double t_end,
 
   return res.copy(); //copy the object so numpy owns the copy
 }
+*/
 
-BOOST_PYTHON_FUNCTION_OVERLOADS(integrate_afo_overloads, integrate_afo, 8, 10)
-
-BOOST_PYTHON_MODULE(afos)
+PYBIND11_MODULE(afos, m)
 {
-  //important to have correct array passing between python and c++
-  boost::python::numeric::array::set_module_and_type("numpy", "ndarray");
-  import_array();
-
-
-  class_<PhaseAFO>("PhaseAFO", no_init)
-  	                    .enable_pickling();
-  def("integrate_afo",integrate_afo,integrate_afo_overloads());
+  py::class_<PhaseAFO>(m,"PhaseAFO")
+	.def(py::init<>())
+	.def("integrate", &PhaseAFO::integrate)
+	.def("initialize", &PhaseAFO::init)
+	.def("initialize_vec", &PhaseAFO::init1)
+	.def("t", &PhaseAFO::t, py::return_value_policy::reference_internal)
+	.def("y", &PhaseAFO::y, py::return_value_policy::reference_internal);
 }
