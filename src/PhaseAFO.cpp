@@ -30,7 +30,7 @@ void PhaseAFO::init(double K, double omegaF, double lambda)
   initialized_ = true;
 }
 
-void PhaseAFO::init1(double K, const Eigen::VectorXd& freq,
+void PhaseAFO::init_vec(double K, const Eigen::VectorXd& freq,
                const Eigen::VectorXd& amp, const Eigen::VectorXd& phase,
                double lambda)
 {

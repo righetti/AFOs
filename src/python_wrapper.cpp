@@ -65,13 +65,13 @@ py::object integrate_afo(double t_init, double t_end,
 }
 */
 
-PYBIND11_MODULE(afos, m)
+PYBIND11_MODULE(pyafos, m)
 {
   py::class_<PhaseAFO>(m,"PhaseAFO")
 	.def(py::init<>())
 	.def("integrate", &PhaseAFO::integrate)
 	.def("initialize", &PhaseAFO::init)
-	.def("initialize_vec", &PhaseAFO::init1)
+	.def("initialize_vec", &PhaseAFO::init_vec)
 	.def("t", &PhaseAFO::t, py::return_value_policy::reference_internal)
 	.def("y", &PhaseAFO::y, py::return_value_policy::reference_internal);
 }

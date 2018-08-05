@@ -12,7 +12,7 @@ execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory ${EXECUTABLE_OUTPUT_P
 
 include_directories(/usr/local/include/eigen3/)
 
-add_library(afos src/PhaseAFO.cpp)
+add_library(afos STATIC src/PhaseAFO.cpp)
 
 ADD_EXECUTABLE(test_afo
                 src/test_phase_afo.cpp)
@@ -25,4 +25,6 @@ find_package(pybind11 REQUIRED)
 
 pybind11_add_module(pyafos src/python_wrapper.cpp)
 
-install(TARGETS pyafos LIBRARY DESTINATION ${PROJECT_SOURCE_DIR}/python)
+target_link_libraries(pyafos PRIVATE afos)
+
+install(TARGETS  pyafos LIBRARY DESTINATION ${PROJECT_SOURCE_DIR}/python)

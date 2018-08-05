@@ -16,7 +16,7 @@ public:
   ~PhaseAFO();
 
   void init(double K, double omegaF, double lambda);
-  void init1(double K, const Eigen::VectorXd& freq,
+  void init_vec(double K, const Eigen::VectorXd& freq,
            const Eigen::VectorXd& amp, const Eigen::VectorXd& phase,
            double lambda);
 
