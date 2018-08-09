@@ -1,3 +1,7 @@
+""" this contains functions to generate the plots for the SIAM AFO paper
+    for Section 3, that only includes the prediction parts and the manifolds
+"""
+
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib as mp

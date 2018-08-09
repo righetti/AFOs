@@ -11,12 +11,15 @@
 #include <cstdio>
 #include <functional>
 
+namespace afos
+{
+
 PhaseAFO::PhaseAFO()
 {
   initialized_ = false;
 }
 
-void PhaseAFO::init(double K, double omegaF, double lambda)
+void PhaseAFO::init_sine(double K, double omegaF, double lambda)
 {
   K_ = K;
   freq_.resize(1);
@@ -27,10 +30,14 @@ void PhaseAFO::init(double K, double omegaF, double lambda)
   amp_(0) = 1.0;
   phase_(0) = 0.0;
   lambda_ = lambda;
+
+  input_fun_ = [&](double t){
+      return double(((freq_*t + phase_).array().cos()).matrix().dot(amp_));};
+
   initialized_ = true;
 }
 
-void PhaseAFO::init_vec(double K, const Eigen::VectorXd& freq,
+void PhaseAFO::init_vec_of_sines(double K, const Eigen::VectorXd& freq,
                const Eigen::VectorXd& amp, const Eigen::VectorXd& phase,
                double lambda)
 {
@@ -41,18 +48,32 @@ void PhaseAFO::init_vec(double K, const Eigen::VectorXd& freq,
   phase_ = phase;
 
   lambda_ = lambda;
+
+  input_fun_ = [&](double t){
+      return double(((freq_*t + phase_).array().cos()).matrix().dot(amp_));};
+
   initialized_ = true;
 }
 
-PhaseAFO::~PhaseAFO()
+void PhaseAFO::init_frequency_changing_sine(double K, double omega_F, double omega_C, double lambda)
 {
+    K_ = K;
+    lambda_ = lambda;
+    double omega_C_inv = 1.0/omega_C;
+    freq_.resize(1);
+    freq_(0) = omega_F;
+    input_fun_ = [=](double t){
+        return sin(omega_C_inv * sin(omega_C*t) + omega_F*t);
+    };
+
+    initialized_ = true;
 }
+
 
 inline Eigen::Vector2d PhaseAFO::dydt(const Eigen::Vector2d& y, double t)
 {
   Eigen::Vector2d dydt;
-  double perturbation = ((freq_*t + phase_).array().cos()).matrix().dot(amp_);
-  double tt = - K_ * sin(y(0)) * perturbation;
+  double tt = - K_ * sin(y(0)) * input_fun_(t);
 
   dydt(0) = lambda_ * y(1) + tt;
   dydt(1) = tt;
@@ -85,5 +106,7 @@ void PhaseAFO::integrate(double t_init, double t_end,
       y_.col(i) += dydt(y_.col(i),t_(i-1)+double(j)*dt) * dt;
     t_(i) = t_(i-1) + save_dt;
   }
+
+}
 
 }
