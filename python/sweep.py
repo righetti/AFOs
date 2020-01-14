@@ -42,10 +42,10 @@ fig_size = [fig_width, fig_height]
 #           'text.usetex': True,
 #           'figure.figsize': fig_size}
 
-mp.rc('lines', lw=6)
-mp.rc('savefig', format='pdf')
-mp.rc('font', size=40)
-mp.rc('text', usetex=True)
+# mp.rc('lines', lw=6)
+# mp.rc('savefig', format='pdf')
+# mp.rc('font', size=40)
+# mp.rc('text', usetex=True)
 
 
 def find_min_max(omega):
@@ -82,15 +82,15 @@ def find_min_max(omega):
 
 def plot_sweep_afosimple(use_saved_data):
     mp.rc('lines', lw=4)
-    mp.rc('font', size=60)
+    #mp.rc('font', size=60)
 
     K = 10000.
-    omegaF = 100.
-    num_data_point = 100
-    omegaC = np.logspace(1e-2, 1e2, num=num_data_point)
+    omegaF = 10000.
+    num_data_point = 10
+    omegaC = np.logspace(-2, 2, num=num_data_point)
     lamb = 1.
     dt = 10**-4
-    save_dt = 10**-3
+    save_dt = 10**-4
     omega0 = omegaF
     phi0 = 0
 
@@ -102,7 +102,17 @@ def plot_sweep_afosimple(use_saved_data):
         for i, omC in enumerate(omegaC):
             t_end = 2*10.*2*pi/omC
             t_start = 0.
-            print(i)
+            if omC < 1e-1:
+                save_dt = 1e-1
+                dt = 10**-4
+            else:
+                if omC < 1e1:
+                    save_dt = 1e-3
+                    dt = 10**-5
+                else:
+                    save_dt = 1e-5
+                    dt = 10**-5
+            print(i, omC, t_end)
             afos = PhaseAFO()
             afos.initialize_frequency_changing_sine(K, omegaF, omC, lamb)
             afos.integrate(t_start, t_end, np.array([phi0, omega0]),
@@ -140,9 +150,9 @@ def plot_sweep_afosimple(use_saved_data):
     # plot stuff
     plt.figure()
     plt.subplot(2, 1, 1)
-    plt.plot(omegaC, amp)
+    plt.semilogx(omegaC, amp)
     plt.subplot(2, 1, 2)
-    plt.plot(omegaC, phase)
+    plt.semilogx(omegaC, phase)
 
 #    m = plt.get_current_fig_manager()
 #    m.resize(1591, 1273)
