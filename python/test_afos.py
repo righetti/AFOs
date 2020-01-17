@@ -1,4 +1,4 @@
-from afos import afos
+from pyafos import afos
 from pylab import *
 from scipy import *
 from numpy import *
