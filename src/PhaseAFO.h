@@ -27,7 +27,7 @@ public:
     //!
     //! \brief init_vec_of_sines
     //! sets a sum of sine inputs with amplitudes and delays
-    void init_vec_of_sines(double K, const Eigen::VectorXd& freq,
+    void initialize_vec_of_sines(double K, const Eigen::VectorXd& freq,
                            const Eigen::VectorXd& amp, const Eigen::VectorXd& phase,
                            double lambda);
     //!

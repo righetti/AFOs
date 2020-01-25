@@ -37,7 +37,7 @@ void PhaseAFO::init_sine(double K, double omegaF, double lambda)
   initialized_ = true;
 }
 
-void PhaseAFO::init_vec_of_sines(double K, const Eigen::VectorXd& freq,
+void PhaseAFO::initialize_vec_of_sines(double K, const Eigen::VectorXd& freq,
                const Eigen::VectorXd& amp, const Eigen::VectorXd& phase,
                double lambda)
 {

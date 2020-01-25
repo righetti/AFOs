@@ -23,7 +23,7 @@ PYBIND11_MODULE(pyafos, m)
 	.def(py::init<>())
 	.def("integrate", &PhaseAFO::integrate)
     .def("initialize_sine", &PhaseAFO::init_sine)
-    .def("initialize_vec_of_sines", &PhaseAFO::init_vec_of_sines)
+    .def("initialize_vec_of_sines", &PhaseAFO::initialize_vec_of_sines)
     .def("initialize_frequency_changing_sine", &PhaseAFO::init_frequency_changing_sine)
 	.def("t", &PhaseAFO::t, py::return_value_policy::reference_internal)
 	.def("y", &PhaseAFO::y, py::return_value_policy::reference_internal);
