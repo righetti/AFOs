@@ -11,7 +11,7 @@ K = 10.**6
 omegaF = 30.
 freq = omegaF * np.array([1.,2.,3.])
 amp = np.array([1.3,1.,1.4])
-phase = np.array([0.4,0.,1.3])
+phase = np.array([0.4,0.0,1.3]) + np.pi/2.0
 lamb = 1
 dt = 10**-7
 save_dt = 10**-3
@@ -22,7 +22,8 @@ phi0 = 0.
 
 #run an integration
 oscill = pyafos.PhaseAFO()
-oscill.initialize_vec_of_sines(K,freq,amp,phase,lamb)
+oscill.initialize(K, lamb)
+oscill.input().vec_of_sines(freq,amp,phase)
 oscill.integrate(t_start,t_end,np.array([phi0,omega0]),dt,save_dt)
 
 #get the data to be plotted    

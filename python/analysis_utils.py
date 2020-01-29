@@ -11,7 +11,7 @@ def periodic_f(t,freq,amp,phase):
 
     f = np.zeros(np.size(t))
     for i in range(np.size(freq)):
-        f = f + np.cos(freq[i]*t + phase[i]) * amp[i]
+        f = f + np.sin(freq[i]*t + phase[i]) * amp[i]
         
     return f
 

@@ -11,6 +11,7 @@
 #include <pybind11/pybind11.h>
 #include <pybind11/eigen.h>
 #include "PhaseAFO.h"
+#include "InputPerturbation.h"
 
 
 namespace py = pybind11;
@@ -20,11 +21,17 @@ using namespace afos;
 PYBIND11_MODULE(pyafos, m)
 {
   py::class_<PhaseAFO>(m,"PhaseAFO")
-	.def(py::init<>())
-	.def("integrate", &PhaseAFO::integrate)
-    .def("initialize_sine", &PhaseAFO::init_sine)
-    .def("initialize_vec_of_sines", &PhaseAFO::initialize_vec_of_sines)
-    .def("initialize_frequency_changing_sine", &PhaseAFO::init_frequency_changing_sine)
-	.def("t", &PhaseAFO::t, py::return_value_policy::reference_internal)
-	.def("y", &PhaseAFO::y, py::return_value_policy::reference_internal);
+	  .def(py::init<>())
+    .def("initialize", &PhaseAFO::initialize)
+	  .def("integrate", &PhaseAFO::integrate)
+    .def("t", &PhaseAFO::t, py::return_value_policy::reference_internal)
+	  .def("y", &PhaseAFO::y, py::return_value_policy::reference_internal)
+    .def("input", &PhaseAFO::input, py::return_value_policy::reference_internal);
+
+  py::class_<InputPerturbation>(m, "InputPerturbation")
+    .def(py::init<>())
+    .def("sine", &InputPerturbation::sine)
+    .def("vec_of_sines", &InputPerturbation::vec_of_sines)
+    .def("frequency_changing_sine", &InputPerturbation::frequency_changing_sine)
+    .def("get", &InputPerturbation::get);
 }

@@ -19,7 +19,8 @@ int main(int argc, char **argv)
   y_init << 0.0, 10.0;
 
   afos::PhaseAFO my_afo;
-  my_afo.init_sine(1000.0, 100, 1);
+  my_afo.initialize(1000.0, 1.);
+  my_afo.input().sine(100.);
   my_afo.integrate(t_init, t_end,y_init,dt, save_dt);
   Eigen::VectorXd t = my_afo.t();
   Eigen::MatrixXd y = my_afo.y();

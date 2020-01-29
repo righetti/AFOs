@@ -16,64 +16,21 @@ namespace afos
 
 PhaseAFO::PhaseAFO()
 {
+  K_ = 0.0;
   initialized_ = false;
 }
 
-void PhaseAFO::init_sine(double K, double omegaF, double lambda)
+void PhaseAFO::initialize(double K, double lambda)
 {
   K_ = K;
-  freq_.resize(1);
-  amp_.resize(1);
-  phase_.resize(1);
-
-  freq_(0) = omegaF;
-  amp_(0) = 1.0;
-  phase_(0) = 0.0;
   lambda_ = lambda;
-
-  input_fun_ = [&](double t){
-      return double(((freq_*t + phase_).array().cos()).matrix().dot(amp_));};
-
   initialized_ = true;
 }
-
-void PhaseAFO::initialize_vec_of_sines(double K, const Eigen::VectorXd& freq,
-               const Eigen::VectorXd& amp, const Eigen::VectorXd& phase,
-               double lambda)
-{
-  K_ = K;
-
-  freq_ = freq;
-  amp_ = amp;
-  phase_ = phase;
-
-  lambda_ = lambda;
-
-  input_fun_ = [&](double t){
-      return double(((freq_*t + phase_).array().cos()).matrix().dot(amp_));};
-
-  initialized_ = true;
-}
-
-void PhaseAFO::init_frequency_changing_sine(double K, double omega_F, double omega_C, double lambda)
-{
-    K_ = K;
-    lambda_ = lambda;
-    double omega_C_inv = 1.0/omega_C;
-    freq_.resize(1);
-    freq_(0) = omega_F;
-    input_fun_ = [=](double t){
-        return sin(omega_C_inv * sin(omega_C*t) + omega_F*t);
-    };
-
-    initialized_ = true;
-}
-
 
 inline Eigen::Vector2d PhaseAFO::dydt(const Eigen::Vector2d& y, double t)
 {
   Eigen::Vector2d dydt;
-  double tt = - K_ * sin(y(0)) * input_fun_(t);
+  double tt = - K_ * sin(y(0)) * input_.get(t);
 
   dydt(0) = lambda_ * y(1) + tt;
   dydt(1) = tt;

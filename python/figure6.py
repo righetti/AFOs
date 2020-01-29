@@ -4,16 +4,16 @@ import pyafos
 
 from analysis_utils import find_roots, compute_maps
 
-use_saved_data = True
+use_saved_data = False
 
 mp.rc('lines', lw=4)
 mp.rc('font', size=60)
     
 K = 10.**7
 omegaF = 30.
-freq = omegaF * np.array([1.,sqrt(2.),pi/sqrt(2.)])
-amp = np.array([1.3,1.,1.4])
-phase = np.array([0.,0.,0.])
+freq = omegaF * np.array([1.,sqrt(2.),pi/sqrt(2.)]) 
+amp = np.array([1.3,1.,1.4]) 
+phase = np.array([0.,0.,0.]) + np.pi/2.0
 lamb = 1
 dt = 10**-8
 save_dt = 10**-3
@@ -32,7 +32,8 @@ if use_saved_data:
 else:
     #run an integration
     oscill = pyafos.PhaseAFO()
-    oscill.initialize_vec_of_sines(K,freq,amp,phase,lamb)
+    oscill.initialize(K, lamb)
+    oscill.input().vec_of_sines(freq, amp, phase)
     oscill.integrate(t_start,t_end,np.array([phi0,omega0]),dt,save_dt)
 
     #generate data to be plotted    
