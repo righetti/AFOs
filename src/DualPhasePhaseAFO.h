@@ -1,12 +1,12 @@
 /*
- * PhaseAFO.h
+ * DualPhasePhaseAFO.h
  *
- *  Created on: Sep 20, 2013
+ *  Created on: Jan 29, 2020
  *      Author: righetti
  */
 
-#ifndef PHASEAFO_H_
-#define PHASEAFO_H_
+#ifndef DUALPHASEPHASEAFO_H
+#define DUALPHASEPHASEAFO_H
 
 #include <eigen3/Eigen/Eigen>
 
@@ -16,16 +16,16 @@
 namespace afos
 {
 
-class PhaseAFO{
+class DualPhasePhaseAFO {
 public:
-    PhaseAFO();
-    ~PhaseAFO(){};
+    DualPhasePhaseAFO();
+    ~DualPhasePhaseAFO(){};
 
-    void initialize(double K, double lambda);
+    void initialize(double K, double lambda, double omegaF);
 
     InputPerturbation& input(){return input_;}
     
-    const Eigen::Vector2d dydt(const Eigen::Vector2d& y, double t);
+    const Eigen::Vector3d dydt(const Eigen::Vector3d& y, double t);
     
     const int num_states(){return num_states_;}
     
@@ -38,10 +38,11 @@ public:
 private:
     double K_;
     double lambda_;
+    double omegaF_;
 
-    const int num_states_ = 2;
+    const int num_states_ = 3;
 
     InputPerturbation input_;
 };
 }
-#endif /* PHASEAFO_H_ */
+#endif /* DUALPHASEPHASEAFO_H */

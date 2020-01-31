@@ -27,8 +27,7 @@ void InputPerturbation::sine(double omegaF)
   amp_(0) = 1.0;
   phase_(0) = 0.0;
 
-  input_ = [&](double t){
-      return double(((freq_*t + phase_).array().cos()).matrix().dot(amp_));};
+  input_ = [&](double t) { return double(((freq_*t + phase_).array().cos()).matrix().dot(amp_)); };
 }
 
 void InputPerturbation::vec_of_sines(const Eigen::VectorXd& freq,
@@ -38,8 +37,7 @@ void InputPerturbation::vec_of_sines(const Eigen::VectorXd& freq,
   amp_ = amp;
   phase_ = phase;
 
-  input_ = [&](double t){
-      return double(((freq_*t + phase_).array().sin()).matrix().dot(amp_));};
+  input_ = [&](double t) { return double(((freq_*t + phase_).array().sin()).matrix().dot(amp_)); };
 }
 
 void InputPerturbation::frequency_changing_sine(double omega_F, double omega_C)
@@ -47,8 +45,6 @@ void InputPerturbation::frequency_changing_sine(double omega_F, double omega_C)
     double omega_C_inv = 1.0/omega_C;
     freq_.resize(1);
     freq_(0) = omega_F;
-    input_ = [=](double t){
-        return sin(omega_C_inv * sin(omega_C*t) + omega_F*t);
-    };
+    input_ = [=](double t){ return sin(omega_C_inv * sin(omega_C*t) + omega_F*t); };
 }
 }
