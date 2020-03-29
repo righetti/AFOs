@@ -37,19 +37,19 @@ for om in omegaPert:
   temp_map[np.nonzero(np.abs(temp_map-om)<0.1)] = om
   temp_map[np.nonzero(np.abs(temp_map-om)>=0.1)] = om + 100
   temp_map = temp_map - om
-  plt.contour(omegaSweep, KSweep, temp_map, colors='k', linewidths=4, linestyles=':')
+  plt.contour(omegaSweep, KSweep, temp_map, 0, colors='k', linewidths=4, linestyles=':')
   #plt.pcolormesh(omegaSweep, KSweep, temp_map)
 
 # do a contour plot of the convergence adaptive frequency
 # conv_freq = np.floor(conv_freq)
-plt.contour(omegaSweep, KSweep, conv_freq, colors='k', linewidths=4)
+plt.contour(omegaSweep, KSweep, conv_freq, 2, colors='k', linewidths=4)
 
 # detect exponential convergence
 # mean_error[np.nonzero(np.abs(mean_error)<0.01)] = 0.
 # mean_error[np.nonzero(np.abs(mean_error)>=0.01)] = -.1
 # plt.pcolormesh(omegaSweep, KSweep, mean_error, cmap='Greys', vmin=-0.1, vmax=0.2)
-max_error = max_error
-threshold = 2*np.pi
+max_error = max_error/amp_error
+threshold = 15.
 max_error[np.nonzero(np.abs(max_error)<threshold)] = 0.
 max_error[np.nonzero(np.abs(max_error)>=threshold)] = -.1
 plt.pcolormesh(omegaSweep, KSweep, max_error, cmap='Greys', vmin=-.1, vmax = 0.1)

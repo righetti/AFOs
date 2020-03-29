@@ -17,8 +17,8 @@ if __name__ == '__main__':
 
   savename = 'result2sin.npz'
  
-  KSweep = np.logspace(1,3,200)
-  omegaSweep = np.linspace(20., 100., 200)
+  KSweep = np.logspace(0,3,250)
+  omegaSweep = np.linspace(10., 110., 250)
  
   dt = 0.0001
   save_dt = 0.001
@@ -42,19 +42,37 @@ if __name__ == '__main__':
   mean_error = np.frombuffer(mean_error).reshape((numK, numOm))
   amp_error = np.frombuffer(amp_error).reshape((numK, numOm))
 
+
+  data = np.load('result2sin.npz')
+
+  np.copyto(avg_freq, data['avg_freq'])
+  np.copyto(conv_freq, data['conv_freq'])
+  np.copyto(mean_error, data['mean_error'])
+  np.copyto(max_error, data['max_error'])
+  np.copyto(amp_error, data['amp_error'])
+
   process_mutex = multiprocessing.Lock()
 
   def process_parallel(i,j):
     K = KSweep[i]
     om = omegaSweep[j]
 
-    # if K < 10:
-    #   T = 300.
+    if K > 5:
+      return
+    if (om < 45) or (om > 80) or (om > 52 and om < 71):
+      return
+
+    if K < 5:
+      T = 3600.
+    elif K < 10:
+      T = 1800.
+    else:
+      T = 300.
     # elif K < 50:
     #   T = 200.
     # else:
     #   T = 100.
-    T = 300.
+    # T = 300.
 
     print("processing K = " + str(K) + " and omega = " + str(om))
 
