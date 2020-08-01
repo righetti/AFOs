@@ -43,13 +43,13 @@ if __name__ == '__main__':
   amp_error = np.frombuffer(amp_error).reshape((numK, numOm))
 
 
-  data = np.load('result2sin.npz')
+  # data = np.load('result2sin.npz')
 
-  np.copyto(avg_freq, data['avg_freq'])
-  np.copyto(conv_freq, data['conv_freq'])
-  np.copyto(mean_error, data['mean_error'])
-  np.copyto(max_error, data['max_error'])
-  np.copyto(amp_error, data['amp_error'])
+  # np.copyto(avg_freq, data['avg_freq'])
+  # np.copyto(conv_freq, data['conv_freq'])
+  # np.copyto(mean_error, data['mean_error'])
+  # np.copyto(max_error, data['max_error'])
+  # np.copyto(amp_error, data['amp_error'])
 
   process_mutex = multiprocessing.Lock()
 

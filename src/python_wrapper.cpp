@@ -14,6 +14,7 @@
 #include "PhaseAFO.h"
 #include "InputPerturbation.h"
 #include "DualPhasePhaseAFO.h"
+#include "PoolAFO.h"
 #include "Integrator.h"
 
 
@@ -25,12 +26,15 @@ PYBIND11_MODULE(pyafos, m)
 {
   m.def("integrate", &euler_integration<PhaseAFO>);
   m.def("integrate", &euler_integration<DualPhasePhaseAFO>);
+  m.def("integrate", &euler_integration<PoolAFO>);
+
+  m.def("integrateRK", &rungekutta_integration<PhaseAFO>);
+  m.def("integrateRK", &rungekutta_integration<DualPhasePhaseAFO>);
 
   py::class_<PhaseAFO>(m,"PhaseAFO")
 	  .def(py::init<>())
     .def("initialize", &PhaseAFO::initialize)
     .def("input", &PhaseAFO::input, py::return_value_policy::reference_internal)
-    // .def("integrate", &PhaseAFO::integrate)
     .def("t", &PhaseAFO::t, py::return_value_policy::reference_internal)
 	  .def("y", &PhaseAFO::y, py::return_value_policy::reference_internal);
 
@@ -45,7 +49,13 @@ PYBIND11_MODULE(pyafos, m)
 	  .def(py::init<>())
     .def("initialize", &DualPhasePhaseAFO::initialize)
     .def("input", &DualPhasePhaseAFO::input, py::return_value_policy::reference_internal)
-    // .def("integrate", &DualPhasePhaseAFO::integrate)
     .def("t", &DualPhasePhaseAFO::t, py::return_value_policy::reference_internal)
 	  .def("y", &DualPhasePhaseAFO::y, py::return_value_policy::reference_internal);
+
+  py::class_<PoolAFO>(m,"PoolAFO")
+	  .def(py::init<>())
+    .def("initialize", &PoolAFO::initialize)
+    .def("input", &PoolAFO::input, py::return_value_policy::reference_internal)
+    .def("t", &PoolAFO::t, py::return_value_policy::reference_internal)
+	  .def("y", &PoolAFO::y, py::return_value_policy::reference_internal);
 }

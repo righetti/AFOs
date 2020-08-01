@@ -43,8 +43,10 @@ void InputPerturbation::vec_of_sines(const Eigen::VectorXd& freq,
 void InputPerturbation::frequency_changing_sine(double omega_F, double omega_C)
 {
     double omega_C_inv = 1.0/omega_C;
-    freq_.resize(1);
+    freq_.resize(3);
     freq_(0) = omega_F;
-    input_ = [=](double t){ return sin(omega_C_inv * sin(omega_C*t) + omega_F*t); };
+    freq_(1) = omega_C;
+    freq_(2) = omega_C_inv;
+    input_ = [&](double t){ return sin(freq_(2) * sin(freq_(1)*t) + freq_(0)*t); };
 }
 }

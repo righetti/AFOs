@@ -24,7 +24,7 @@ phi0 = 0.
 oscill = pyafos.PhaseAFO()
 oscill.initialize(K, lamb)
 oscill.input().vec_of_sines(freq,amp,phase)
-oscill.integrate(t_start,t_end,np.array([phi0,omega0]),dt,save_dt)
+pyafos.integrate(oscill, t_start,t_end,np.array([phi0,omega0]),dt,save_dt)
 
 #get the data to be plotted    
 t = oscill.t()

@@ -12,7 +12,11 @@ execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory ${EXECUTABLE_OUTPUT_P
 
 include_directories(/usr/local/include/eigen3/)
 
-add_library(afos STATIC src/PhaseAFO.cpp src/InputPerturbation.cpp src/DualPhasePhaseAFO.cpp)
+add_library(afos STATIC 
+            src/PhaseAFO.cpp 
+            src/InputPerturbation.cpp 
+            src/DualPhasePhaseAFO.cpp 
+            src/PoolAFO.cpp)
 
 ADD_EXECUTABLE(test_afo
                 src/test_phase_afo.cpp)
