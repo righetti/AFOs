@@ -36,20 +36,26 @@ def find_frequency_response(arg):
     omegaC = arg[1]
 
     K = 10.**5
-    omegaF = 100.
+    omegaF = 1000.
 
     dt = 10**-5
-    save_dt = 10**-4
+    
+    if omegaC < 50.:
+        save_dt = 10**-4
+    else:
+        save_dt = 10**-5
 
-    min_time = 30.
 
-    # if omegaC>50.:
-    #     save_dt = 10**-4
 
     # here the convergence rate is too slow - leads to large transcient
     if lamb < 1.:
         min_time = 200.
+    else:
+        min_time = 100.
 
+    max_time = 10000.
+
+    
     print("processing lambda = " + str(lamb) + " and omegaC = " + str(omegaC))
 
     oscill = pyafos.PhaseAFO()
@@ -59,7 +65,7 @@ def find_frequency_response(arg):
     # set initial conditions
     # we want to measure at least 50 oscillations of omegaC
     # 50 * 2pi/omegaC
-    t_end = np.max([50 * 2 * np.pi / omegaC, min_time])
+    t_end = np.min([np.max([50 * 2 * np.pi / omegaC, min_time]),max_time])
     t_start = 0.
     omega0 = (omegaF + 1.) / lamb
     phi0 = 0.
@@ -90,10 +96,15 @@ def find_frequency_response(arg):
 
     response = scipy.signal.hilbert(track-np.mean(track)) / scipy.signal.hilbert(track_signal-omegaF)
 
-    # we only keep the middle third of the response to remove side effects
+    # we only keep the middle third of the response to remove boarder effects
     si = response.size
     am = np.mean(np.abs(response[int(si/3):int(2*si/3)]))
-    ph = np.mean((np.angle(response[int(si/3):int(2*si/3)]) - 2 * np.pi))%(-2*np.pi)
+    #to make sure all is close to each other
+    angle = np.unwrap(np.angle(response[int(si/3):int(2*si/3)]))
+    ph = np.mean(angle-2*np.pi)%(-2*np.pi)
+    if np.abs(ph) > 1.8*np.pi:
+        ph = ph+2*np.pi
+    # ph = np.mean((np.angle(response[int(si/3):int(2*si/3)]) - 2 * np.pi))%(-2*np.pi)
     print("done with lambda = " + str(lamb) + " and omegaC = " + str(omegaC) + "found " + str(am) + " " + str(ph))
     
     # amplitude[i,j] = am
@@ -113,24 +124,24 @@ if __name__ == '__main__':
     amplitude = np.zeros([num_lamb, num_omegaC])
     phase = np.zeros([num_lamb, num_omegaC])
 
-    savename = 'resultFreqResp.npz'
+    data = np.load('resultFreqResp.npz')
+    amplitude = data['amplitude']
+    phase = data['phase']
 
-    #data = np.load('result2sin.npz')
-
-    #np.copyto(avg_freq, data['avg_freq'])
+    savename = 'resultFreqResp2.npz'
     
-    # with ProcessPoolExecutor() as executor:
-    #     tasks_iter = list(itertools.product(list(range(len(lamb_list))), list(range(len(omegaC_list)))))
-    #     params_iter = list(itertools.product(lamb_list, omegaC_list))
-    #     for t, res in zip(tasks_iter, executor.map(find_frequency_response, params_iter)):
-    #         amplitude[t[0], t[1]] = res[0]
-    #         phase[t[0], t[1]] = res[1]
     with ProcessPoolExecutor() as executor:
-        tasks_iter = list(itertools.product(list(range(len(lamb_list[2:]))), list(range(len(omegaC_list[:14])))))
-        params_iter = list(itertools.product(lamb_list[2:], omegaC_list))
+        # tasks_iter = list(itertools.product(list(range(len(lamb_list))), list(range(len(omegaC_list)))))
+        # params_iter = list(itertools.product(lamb_list, omegaC_list))
+        # for t, res in zip(tasks_iter, executor.map(find_frequency_response, params_iter)):
+        #     amplitude[t[0], t[1]] = res[0]
+        #     phase[t[0], t[1]] = res[1]
+
+        tasks_iter = list(itertools.product(list(range(len(lamb_list))), list(range(len(omegaC_list)))))
+        params_iter = list(itertools.product(lamb_list, omegaC_list))
         for t, res in zip(tasks_iter, executor.map(find_frequency_response, params_iter)):
-            amplitude[t[0], t[1]] = res[0]
-            phase[t[0], t[1]] = res[1]
+            amplitude[t[0],t[1]] = res[0]
+            phase[t[0],t[1]] = res[1]
 
     np.savez(savename, 
             amplitude=amplitude, phase=phase, 
