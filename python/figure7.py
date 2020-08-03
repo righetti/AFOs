@@ -81,10 +81,10 @@ plt.semilogx(omegaC_list, -3*np.pi/4.*np.ones_like(omegaC_list), 'k--', 'k--', l
 plt.semilogx(omegaC_list, -np.pi*np.ones_like(omegaC_list), 'k--', 'k--', lw=6)
 plt.semilogx(omegaC_list, -2*np.pi*np.ones_like(omegaC_list), 'k--', 'k--', lw=6)
 plt.xlim([0.01, 100])
-plt.ylim([-np.pi-0.1,0])
+plt.ylim([-np.pi/2.-0.1,0])
 plt.xlabel(r'$\displaystyle \omega_C$', size=80)
 plt.ylabel(r'Phase [rad]', size=80)
-plt.yticks([-np.pi, -np.pi/2, 0],[r'$-\pi$',r'$-\frac{\pi}{2}$',r'$0$'])
+plt.yticks([-np.pi/2, -np.pi/4, 0],[r'$-\frac{\pi}{2}$',r'$-\frac{\pi}{4}$',r'$0$'])
 fig.savefig("freqRespAngle.pdf", bbox_inches='tight')
 
 plt.show()

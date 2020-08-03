@@ -35,6 +35,8 @@ public:
     //! so the frequency of the sine frequency is changing at a rate of omegaC
     void frequency_changing_sine(double omega_F, double omega_C);
 
+    void chirps_and_exponentials();
+
     double get(double t){return input_(t);};
 
 private:

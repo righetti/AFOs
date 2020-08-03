@@ -49,4 +49,11 @@ void InputPerturbation::frequency_changing_sine(double omega_F, double omega_C)
     freq_(2) = omega_C_inv;
     input_ = [&](double t){ return sin(freq_(2) * sin(freq_(1)*t) + freq_(0)*t); };
 }
+
+void InputPerturbation::chirps_and_exponentials()
+{
+  input_ = [&](double t){return sin(200*t + 2*t*t) + sin(400*t - t*t*t/15) +
+                         sin(300*t)*exp(-(t-5)*(t-5)/2.5) +
+                         sin(400*t)*exp(-(t-30)*(t-30)/5.); };
+}
 }

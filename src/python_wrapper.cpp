@@ -43,6 +43,7 @@ PYBIND11_MODULE(pyafos, m)
     .def("sine", &InputPerturbation::sine)
     .def("vec_of_sines", &InputPerturbation::vec_of_sines)
     .def("frequency_changing_sine", &InputPerturbation::frequency_changing_sine)
+    .def("chirps_and_exponentials", &InputPerturbation::chirps_and_exponentials)
     .def("get", &InputPerturbation::get);    
 
   py::class_<DualPhasePhaseAFO>(m,"DualPhasePhaseAFO")
