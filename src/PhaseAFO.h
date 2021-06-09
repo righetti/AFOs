@@ -11,7 +11,6 @@
 #include <eigen3/Eigen/Eigen>
 
 #include "InputPerturbation.h"
-#include "Integrator.h"
 
 namespace afos
 {

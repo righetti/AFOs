@@ -54,8 +54,8 @@ plt.subplots_adjust(left=0.12, bottom=0.18, top=0.97, right=0.92)
 
 ######################################
 ### plot the invariant manifolds in 3D
-theta_m = arange(-1.0, -0.01, 0.01)
-theta_p = arange(0.01, 1.0, 0.01)
+theta_m = arange(-1.0, -0.001, 0.01)
+theta_p = arange(0.001, 1.0, 0.01)
 Om = arange(-9.9,9.9,0.05)
 
 fig = plt.figure(figsize=(9.5, 7.5))

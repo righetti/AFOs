@@ -65,7 +65,7 @@ def create_subax(fig, ax, rect, xlimit=[], ylimit=[], xticks=[], yticks=[], side
     
     if xlimit and ylimit:
         rect1 = mp.patches.Rectangle((xlimit[0],ylimit[0]), xlimit[1]-xlimit[0], ylimit[1]-ylimit[0], 
-                                    color='k', fill=False, lw=2)
+                                    color='k', fill=False, lw=2, zorder=5)
         ax.add_patch(rect1)
         transData = ax.transData.inverted()
         if side == 'b':

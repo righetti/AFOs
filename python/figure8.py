@@ -1,117 +1,90 @@
-# numba significantly speeds up code
-import numba
+from figure_basics import *
 
-import pyafos
-import IPython
-import scipy.signal
-import numpy as np
-import matplotlib.pylab as plt
-import matplotlib as mp
+fig_width_pt = 4*246.0  # Get this from LaTeX using \showthe\columnwidth
+inches_per_pt = 1.0/72.27               # Convert pt to inch
+golden_mean = (np.sqrt(5)-1.0)/2.0         # Aesthetic ratio
+fig_width = fig_width_pt*inches_per_pt  # width in inches
+fig_height = fig_width*golden_mean      # height in inches
+fig_size =  [fig_width,fig_height]
 
-@numba.njit
-def get_input(t, freq, amp, phase):
-    out = np.zeros_like(t)
-    for i in range(freq.shape[0]):
-        out += amp[i] * np.sin(freq[i]*t + phase[i])
-    return out
 
-@numba.njit
-def get_pool_output(phi, amp):
-    out = np.zeros_like(phi[0,:])
-    for i in range(phi[0,:].size):
-        for j in range(phi[:,0].size):
-            out[i] += amp[j,i] * np.cos(phi[j,i])
-    return out
-    
+# params = {'backend': 'ps',
+#           'axes.labelsize': 40,
+#           'font.size': 40,
+#           'legend.fontsize': 40,
+#           'xtick.labelsize': 40,
+#           'ytick.labelsize': 40,
+#           'lines.linewidth': 6,
+#           'text.usetex': True,
+#           'figure.figsize': fig_size}
+
 mp.rc('lines', lw=12)
 mp.rc('savefig', format='pdf')
-mp.rc('font', size = 80)
+mp.rc('font', size = 60)
 mp.rc('text', usetex = True)
-mp.rc('figure', figsize=(19.8875,  2*15.9125))
-
-# mp.rcdefaults()
-
-def plot_results(frequencies, amplitudes, omega, alpha, in_signal, output, N):
-    fig = plt.figure()
-    plt.subplot(3,1,1)
-    for i in range(N):
-        plt.plot(t, omega[i,:])
-        plt.plot([t[0],t[-1]], [frequencies[i], frequencies[i]], 'k--')
-    plt.xlim([0, 50.])
-    plt.ylim([-10, 90.])
-    plt.ylabel(r'$\omega_i$')
-
-    plt.subplot(3,1,2)
-    for i in range(N):
-        plt.plot(t, alpha[i,:])
-        plt.plot([t[0],t[-1]], [amplitudes[i], amplitudes[i]], 'k--')
-    plt.xlim([0, 50.])
-    plt.ylim([0, 2.])
-    plt.ylabel(r'$\alpha_i$')
-
-    plt.subplot(3,1,3)
-    plt.plot(t, (in_signal-output)**2)
-    plt.xlim([0, 50.])
-    plt.ylim([0, 12.])
-    plt.ylabel(r'$|I(t)|^2$')
-    plt.xlabel('Time [s]')
-    fig.savefig('pool_3oscill_K'+str(K)+'.pdf', bbox_inches='tight')
-    
-    
-
-def simulate_pool(N, K, lamb, eta, amplitudes, frequencies, phases):
-    dt = 10**-5 #need 10-7 for Euler with K = 10*7
-    save_dt = 10**-3
-    t_end = 50. #50 * 2 * np.pi / omegaC#30.
-    t_start = 0.
-
-    oscill = pyafos.PoolAFO()
-    oscill.initialize(N, K, lamb, eta)
-    oscill.input().vec_of_sines(frequencies, amplitudes, phases)
-
-    phi0 = np.zeros([3])
-    alpha0 = np.zeros([3])
-    omega0 = np.array([40., 69., 71.])/lamb
-    x0 = np.hstack([phi0, omega0, alpha0])
-    pyafos.integrate(oscill, t_start,t_end,x0,dt,save_dt)
-
-    #generate data to be plotted    
-    t = oscill.t()
-    phi = oscill.y()[0:3,:]
-    omega = lamb*oscill.y()[3:6,:]
-    alpha = oscill.y()[6:,:]
-    
-    return t, phi, omega, alpha
 
 
 
+savename = 'resultFreqResp.npz'
 
-amplitudes = np.array([1.3, 1., 1.4])
-frequencies = np.array([30., 30.*np.sqrt(2), 30.*np.pi/np.sqrt(2)])
-# frequencies = np.array([30., 45., 60.])
-phases = np.zeros([3])
+data = np.load(savename)
 
+amplitude = data['amplitude']
+phase = data['phase']
 
-N = 3
+omegaC_list = data["omegaC_list"]
 
-lamb = 1
-eta = 10
+lamb_list = data["lamb_list"]
 
 plt.close('all')
+    
+fig = plt.figure(figsize=(19.8875,  15.9125))
+m = plt.get_current_fig_manager()
+m.resize(1591, 1273)
+#axes 1
+ax = fig.add_subplot(111)
 
-K = 10
-t, phi, omega, alpha = simulate_pool(N, K, lamb, eta, amplitudes, frequencies, phases)
-in_signal = get_input(t, frequencies, amplitudes, phases)
-output = get_pool_output(phi, alpha)
-plot_results(frequencies, amplitudes, omega, alpha, in_signal, output, N)
+plt.semilogx(omegaC_list, 20*np.log10(amplitude[0,:]))
+plt.semilogx(omegaC_list, 20*np.log10(amplitude[1,:]))
+plt.semilogx(omegaC_list, 20*np.log10(amplitude[2,:]))
+plt.semilogx(omegaC_list, 0.0*np.ones_like(omegaC_list), 'k--', lw=6)
+plt.semilogx(omegaC_list, -3.*np.ones_like(omegaC_list), 'k--', lw=6)
+plt.semilogx(omegaC_list, -10.*np.ones_like(omegaC_list), 'k--', lw=6)
+plt.semilogx(omegaC_list, -20.*np.ones_like(omegaC_list), 'k--', lw=6)
+# plt.semilogx(omegaC_list, -30.*np.ones_like(omegaC_list), 'k--', lw=4)
+# plt.semilogx(omegaC_list, -40.*np.ones_like(omegaC_list), 'k--', lw=4)
+plt.semilogx([1,1],[2,-35], 'k--', lw=6)
+plt.semilogx([.1,.1],[2,-35], 'k--', lw=6)
+plt.semilogx([10,10],[2,-35], 'k--', lw=6)
+#plt.semilogx([100,100],[2,-30], 'k--')
+plt.ylim([-25,2])
+plt.xlim([0.01, 100])
+plt.yticks([-20,-10,-3,0])
+ax.set_xlabel(r'$\displaystyle \omega_C$', size=80)
+ax.set_ylabel(r'Amplitude [dB]', size=80)
+fig.savefig("freqResp.pdf", bbox_inches='tight')
 
-K = 100
-t, phi, omega, alpha = simulate_pool(N, K, lamb, eta, amplitudes, frequencies, phases)
-output = get_pool_output(phi, alpha)
-plot_results(frequencies, amplitudes, omega, alpha, in_signal, output, N)
+fig = plt.figure(figsize=(19.8875,  15.9125))
+# fig = plt.figure()
+m = plt.get_current_fig_manager()
+m.resize(1591, 1273)
+plt.semilogx(omegaC_list, phase[0,:])
+plt.semilogx(omegaC_list, phase[1,:])
+plt.semilogx(omegaC_list, phase[2,:])
+plt.semilogx([1,1],[2,-35], 'k--', 'k--', lw=6)
+plt.semilogx([.1,.1],[2,-35], 'k--', 'k--', lw=6)
+plt.semilogx([10,10],[2,-35], 'k--', 'k--', lw=6)
+plt.semilogx([100,100],[2,-35], 'k--', 'k--', lw=6)
+plt.semilogx(omegaC_list, -np.pi/4.*np.ones_like(omegaC_list), 'k--', 'k--', lw=6)
+plt.semilogx(omegaC_list, -np.pi/2.*np.ones_like(omegaC_list), 'k--', 'k--', lw=6)
+plt.semilogx(omegaC_list, -3*np.pi/4.*np.ones_like(omegaC_list), 'k--', 'k--', lw=6)
+plt.semilogx(omegaC_list, -np.pi*np.ones_like(omegaC_list), 'k--', 'k--', lw=6)
+plt.semilogx(omegaC_list, -2*np.pi*np.ones_like(omegaC_list), 'k--', 'k--', lw=6)
+plt.xlim([0.01, 100])
+plt.ylim([-np.pi/2.-0.1,0])
+plt.xlabel(r'$\displaystyle \omega_C$', size=80)
+plt.ylabel(r'Phase [rad]', size=80)
+plt.yticks([-np.pi/2, -np.pi/4, 0],[r'$-\frac{\pi}{2}$',r'$-\frac{\pi}{4}$',r'$0$'])
+fig.savefig("freqRespAngle.pdf", bbox_inches='tight')
 
-K = 10000
-t, phi, omega, alpha = simulate_pool(N, K, lamb, eta, amplitudes, frequencies, phases)
-output = get_pool_output(phi, alpha)
-plot_results(frequencies, amplitudes, omega, alpha, in_signal, output, N)
-
+plt.show()

@@ -103,11 +103,11 @@ for tick in ax2.xaxis.get_major_ticks():
 for tick in ax2.yaxis.get_major_ticks():
     tick.label.set_fontsize(40)
 
-ax2_subax1 = create_subax(fig, ax2, [0.67,0.1,0.3,0.5], 
-                          xlimit=[5.55,5.75], ylimit=[omega_bar_avg-3,omega_bar_avg+2.5],
-                          xticks=[5.6,5.7], yticks=[100-3,100,100+3], side='b',
+ax2_subax1 = create_subax(fig, ax2, [0.67,0.1,0.3,0.6], 
+                          xlimit=[5.55,5.75], ylimit=[omega_bar_avg-2.1,omega_bar_avg+2],
+                          xticks=[5.6,5.7], yticks=[100-2,100,100+2], side='b',
                           )
-ax2_subax2 = create_subax(fig, ax2, [0.2,0.1,0.3,0.5], 
+ax2_subax2 = create_subax(fig, ax2, [0.25,0.1,0.3,0.6], 
                           xlimit=[0.15,0.35], ylimit=[27,47],
                           xticks=[0.2,0.3], yticks=[30,35,40,45], side='r',
                           )
@@ -127,7 +127,7 @@ for a in axes_plot:
             a.plot([i,i],[0,110],ls=':',lw=2,color='k')
 
     if a == ax2_subax1:
-        a.plot(t, omega_bar_avg*np.ones(size(t)), ls='-.',lw=4,color='k')
+        a.plot(t, omega_bar_avg*np.ones(size(t)), ls=(0, (3, 3, 1, 3)),lw=4,color='k', zorder=5)
 
     a.plot(t, lamb*omega, color='b', lw=6, ls='-')                    
     a.plot(tn+pi/omegaF/2, lamb*omega_p, ls='', marker='x', markeredgewidth=mw, markersize=ms, color='r')
@@ -135,3 +135,4 @@ for a in axes_plot:
     a.plot(t, lamb*omega_avg, ls='--',lw=4, color='k')
 
 plt.show()
+fig.savefig('convergence_prediction1.pdf', bbox_inches='tight')
