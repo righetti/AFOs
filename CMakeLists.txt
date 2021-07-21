@@ -16,7 +16,8 @@ add_library(afos STATIC
             src/PhaseAFO.cpp 
             src/InputPerturbation.cpp 
             src/DualPhasePhaseAFO.cpp 
-            src/PoolAFO.cpp)
+            src/PoolAFO.cpp
+            src/AFOLorentz.cpp)
 
 ADD_EXECUTABLE(test_afo
                 src/test_phase_afo.cpp)
@@ -24,7 +25,7 @@ ADD_EXECUTABLE(test_afo
 TARGET_LINK_LIBRARIES(test_afo afos)
 
 
-set(PYBIND11_CPP_STANDARD -std=c++11)
+#set(PYBIND11_CPP_STANDARD -std=c++11)
 find_package(pybind11 REQUIRED)
 
 pybind11_add_module(pyafos src/python_wrapper.cpp)

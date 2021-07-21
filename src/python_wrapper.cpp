@@ -15,6 +15,7 @@
 #include "InputPerturbation.h"
 #include "DualPhasePhaseAFO.h"
 #include "PoolAFO.h"
+#include "AFOLorentz.h"
 #include "Integrator.h"
 
 
@@ -27,6 +28,7 @@ PYBIND11_MODULE(pyafos, m)
   m.def("integrate", &euler_integration<PhaseAFO>);
   m.def("integrate", &euler_integration<DualPhasePhaseAFO>);
   m.def("integrate", &euler_integration<PoolAFO>);
+  m.def("integrate", &euler_integration<AfoLorentz>);
 
   m.def("integrateRK", &rungekutta_integration<PhaseAFO>);
   m.def("integrateRK", &rungekutta_integration<DualPhasePhaseAFO>);
@@ -59,4 +61,11 @@ PYBIND11_MODULE(pyafos, m)
     .def("input", &PoolAFO::input, py::return_value_policy::reference_internal)
     .def("t", &PoolAFO::t, py::return_value_policy::reference_internal)
 	  .def("y", &PoolAFO::y, py::return_value_policy::reference_internal);
+
+  py::class_<AfoLorentz>(m,"AfoLorentz")
+	  .def(py::init<>())
+    .def("initialize", &AfoLorentz::initialize)
+    .def("t", &AfoLorentz::t, py::return_value_policy::reference_internal)
+	  .def("y", &AfoLorentz::y, py::return_value_policy::reference_internal);
+  
 }
